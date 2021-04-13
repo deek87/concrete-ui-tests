@@ -1,0 +1,36 @@
+{
+  "name": "concrete5-ui-test",
+  "version": "0.0.9",
+  "description": "A suite for testing concrete5 ",
+  "main": "index.ts",
+  "scripts": {
+    "test": "test",
+    "cypress:open": "cypress open"
+  },
+  "keywords": [
+    "testing",
+    "ui",
+    "frontend",
+    "concrete",
+    "concretecms",
+    "concrete5",
+    "concrete",
+    "5",
+    "concrete",
+    "cms",
+    "cms",
+    "end",
+    "to",
+    "end",
+    "test",
+    "e2e"
+  ],
+  "author": "Derek Cameron <info@derekcameron.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cypress": "^7.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.2.4"
+  }
+}
