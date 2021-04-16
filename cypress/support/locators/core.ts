@@ -30,5 +30,8 @@ export class Area {
 
 export class Notification {
     static success: string = 'div[role="alertdialog"] > div.ccm-notification-success'
+    static info: string = 'div[role="alertdialog"] > div.ccm-notification-info'
+    static infoButtonContainer: string = Notification.info + ' > div.ccm-notification-content > div.ccm-notification-text > div.ccm-notification-inner-buttons';
+    static infoPrimaryButton: string = Notification.infoButtonContainer + ' a.btn.btn-primary';
 
 }
