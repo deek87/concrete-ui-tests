@@ -107,6 +107,7 @@ describe('Editing a page via composer', () => {
 
     it('visits the test blog', () => {
         cy.visit('/blog/test-blog-entry')
+        cy.title().should('contain', 'testing blog entry')
     })
 
     describe('Open the composer editor', () => {
@@ -158,6 +159,7 @@ describe('Editing a page via composer', () => {
         it('visits the blog', () => {
             cy.visit('/blog/test-blog-entry')
             cy.get(Notification.infoPrimaryButton).should('be.visible')
+            cy.title().should('contain', 'testing blog entry - edited')
         })
     })
 })

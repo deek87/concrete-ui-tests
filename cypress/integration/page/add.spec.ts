@@ -1,5 +1,5 @@
 ///<reference types="cypress" />
-import { Notification } from '../../support/locators/core'
+import { Block, Notification } from '../../support/locators/core'
 import { CheckInPanel, ckEditor, PageSettings, Toolbar } from '../../support/locators/edit'
 
 describe('Adding content to a page', () => {
@@ -39,6 +39,10 @@ describe('Adding content to a page', () => {
     it('adds an image block', () => {
 
         cy.dragBlock('image', ['Main', 'Column 3'], true)
+        cy.fileManager('open')
+        cy.fileManager('search', 'houses', true)
+        cy.get(Block.addButton).click('bottom')
+        cy.get(Notification.success).should('be.visible')
     })
     it('publishes the new version', () => {
         cy.visit('/')
@@ -50,5 +54,20 @@ describe('Adding content to a page', () => {
         cy.get(PageSettings.versions).click()
         cy.get(PageSettings.pageVersionCount).should('have.length', 2)
         cy.get(PageSettings.activePageVersionMenu).should('match', PageSettings.pageVersionMenu(2))
+    })
+    it('removes the new version', () => {
+        cy.visit('/')
+        cy.get(Toolbar.pageSettings).click()
+        cy.get(PageSettings.versions).click()
+        cy.get(PageSettings.pageVersionMenu(1)).click()
+        cy.get(PageSettings.popupMenu).should('be.visible')
+        cy.get(PageSettings.popupApprove).click()
+        cy.get(Notification.success).should('be.visible')
+        cy.get(PageSettings.pageVersionMenu(2)).click()
+        cy.get(PageSettings.popupMenu).should('be.visible')
+        cy.get(PageSettings.popupDelete).click()
+        cy.get(Notification.success).should('be.visible')
+        cy.get(PageSettings.pageVersionCount).should('have.length', 1)
+
     })
 })

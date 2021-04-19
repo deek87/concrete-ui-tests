@@ -153,6 +153,12 @@ export class PageSettings {
         return PageSettings.pageVersionActionBase + ' > a[data-launch-versions-menu="ccm-panel-page-versions-version-menu-' + version + '"]'
     }
     static activePageVersionMenu: string = PageSettings.activePageVersionActionBase + ' a.ccm-panel-page-versions-menu-launcher'
+    static popupMenu: string = 'div[id=ccm-popover-menu-container] > div[data-menu^="ccm-panel-page-versions-version-menu"] > div.dropdown-menu'
+    static popupApprove: string = PageSettings.popupMenu + ' > a[data-version-menu-task="approve"]'
+    static popupDuplicate: string = PageSettings.popupMenu + ' > a[data-version-menu-task="duplicate"]'
+    static popupUnapprove: string = PageSettings.popupMenu + ' > a[data-version-menu-task="unapprove"]'
+    static popupNewPage: string = PageSettings.popupMenu + ' > a[data-version-menu-task="new-page"]'
+    static popupDelete: string = PageSettings.popupMenu + ' > a[data-version-menu-task="delete"]'
 }
 
 export class CheckInPanel {
