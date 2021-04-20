@@ -1,5 +1,5 @@
 ///<reference types="cypress" />
-import { Block, Notification } from '../../support/locators/core'
+import { Block, FileSelect, Notification } from '../../support/locators/core'
 import { CheckInPanel, ckEditor, PageSettings, Toolbar } from '../../support/locators/edit'
 
 describe('Adding content to a page', () => {
@@ -40,6 +40,11 @@ describe('Adding content to a page', () => {
 
         cy.dragBlock('image', ['Main', 'Column 3'], true)
         cy.fileManager('open')
+        cy.fileManager('search', 'house')
+        cy.get(FileSelect.sort).click()
+        cy.get(FileSelect.tableRadio).should('have.length', 2)
+        cy.get(FileSelect.sort).click()
+        cy.get(FileSelect.gridLabel).should('have.length', 2)
         cy.fileManager('search', 'houses', true)
         cy.get(Block.addButton).click('bottom')
         cy.get(Notification.success).should('be.visible')

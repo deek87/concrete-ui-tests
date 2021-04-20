@@ -3,6 +3,7 @@ export class Dialog {
     static buttonWrapper: string = Dialog.base + ' div.ui-dialog-buttonpane'
     static primaryButton: string = Dialog.buttonWrapper + ' > .btn-primary:visible'
     static secondaryButton: string = Dialog.buttonWrapper + ' > .btn-secondary:visible'
+    static dangerButton: string = Dialog.buttonWrapper + ' > .btn-danger:visible'
     static cancelButton: string = Dialog.buttonWrapper + '[data-dialog-action="cancel"]:visible'
 }
 
@@ -14,6 +15,16 @@ export class Block {
     static draggedTile: string = 'a.ccm-block-edit-drag.ccm-panel-add-block-draggable-block-type'
     static addButton: string = Dialog.primaryButton
     static cancelButton: string = Dialog.secondaryButton
+
+    static popupMenu: string = 'div[id="ccm-popover-menu-container"] > div[data-block-menu] > div.popover-inner > div.dropdown-menu:visible'
+    static popupMenuItem: string = Block.popupMenu + ' > a'
+    static popupEdit: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href$="/ccm/system/dialogs/block/edit"]'
+    static popupCopy: string = Block.popupMenuItem + '[data-menu-action="block_scrapbook"]'
+    static popupDelete: string = Block.popupMenuItem + '[data-menu-action="delete_block"]'
+    static popupDesign: string = Block.popupMenuItem + '[data-menu-action="block_design"]'
+    static popupAdvanced: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href$="/ccm/system/dialogs/block/cache"]'
+    static popupPermissions: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href$="/ccm/system/dialogs/block/permissions/list"]'
+    static popupGuest: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href$="/ccm/system/dialogs/block/permissions/guest_access"]'
 
 }
 
@@ -56,12 +67,20 @@ export class Area {
     static zoneSubZoneBlank: string = 'div[data-area-handle="!AREA_HANDLE!"][data-area-display-name="!AREA_HANDLE!"] div[data-area-display-name="!SUB_HANDLE!"]'
     static dragZoneLast: string = '>div.ccm-area-block-list> div[class="ccm-area-drag-area"]:last-child'
     static dragZoneFirst: string = '>div.ccm-area-block-list> div[class="ccm-area-drag-area"]:first-child'
-    static zone(area: string): string {
+    static zone(area: string = 'Main'): string {
         return this.zoneBlank.replace(/\!AREA_HANDLE\!/ig, area)
     }
     static zoneSubZone(area: string, sub_zone: string): string {
         return this.zoneSubZoneBlank.replace(/\!AREA_HANDLE\!/ig, area).replace(/\!SUB_HANDLE\!/ig, sub_zone)
     }
+
+    static popoverMenuBase: string = 'div.popover[data-area-menu] > div.popover-inner > div.dropdown-menu:visible'
+    static popoverMenuAddBlock: string = Area.popoverMenuBase + ' > a[data-menu-action="area-add-block"]'
+    static popoverMenuEditDesign: string = Area.popoverMenuBase + ' > a[data-menu-action="edit-area-design"]'
+    static popoverMenuAddLayout: string = Area.popoverMenuBase + ' > a[data-block-type-handle="core_area_layout"]'
+    static popoverMenuPermissions: string = Area.popoverMenuBase + ' > a.dropdown-item.dialog-launch[href*="ccm/system/dialogs/area/edit/permissions"]'
+
+
 
     static subDragZone(area: string, sub_zone: string): string {
         return this.zoneSubZone(area, sub_zone) + this.dragZoneLast
@@ -69,6 +88,13 @@ export class Area {
     static dragZone(area: string): string {
         return this.zone(area) + this.dragZoneLast
     }
+    static zoneHandle(area: string = 'Main'): string {
+        return this.zone(area) + '>div.ccm-area-footer.ccm-ui>div.ccm-area-footer-handle'
+    }
+    static zoneSubZoneHandle(area: string, sub_zone: string): string {
+        return this.zoneSubZone(area, sub_zone) + '>div.ccm-area-footer.ccm-ui>div.ccm-area-footer-handle'
+    }
+
 }
 
 export class Notification {

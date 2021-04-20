@@ -25,7 +25,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('login', (email, password, page) => {
+Cypress.Commands.add('login', (email: string, password: string, page: string = null) => {
     cy.visit('/index.php/login');
     cy.get('#uName').type(email);
     cy.get('#uPassword').type(password);
@@ -33,8 +33,6 @@ Cypress.Commands.add('login', (email, password, page) => {
     cy.getCookie('CONCRETE5_LOGIN').should('exist');
     if (page) {
         cy.visit(page);
-    } else {
-        cy.wait(1000);
     }
     cy.get('body').then(($body) => {
         if ($body.find('button[data-action="agree-privacy-policy"]').length) {
@@ -45,7 +43,7 @@ Cypress.Commands.add('login', (email, password, page) => {
 
 })
 
-Cypress.Commands.add('drag', (dragSelector, dropSelector) => {
+Cypress.Commands.add('drag', (dragSelector: string, dropSelector: string) => {
     cy.get(dragSelector).should('exist').scrollIntoView()
         .get(dropSelector).should('exist');
 

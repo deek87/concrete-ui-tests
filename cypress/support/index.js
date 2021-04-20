@@ -18,6 +18,7 @@ import './commands'
 import './commands/admin'
 import './commands/form'
 import './commands/fileManager'
+import './commands/selection'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
