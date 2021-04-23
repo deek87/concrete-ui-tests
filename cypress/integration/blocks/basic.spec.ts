@@ -1,8 +1,8 @@
 ///<reference types="cypress" />
 
 import { Composer } from "../../support/locators/composer"
-import { Area, Block, Dialog, Notification } from "../../support/locators/core"
-import { ckEditor, SitemapPanel, Toolbar } from "../../support/locators/edit"
+import { Area, Block, Dialog, FileSelect, Form, Notification } from "../../support/locators/core"
+import { AddPanel, ckEditor, SitemapPanel, Toolbar } from "../../support/locators/edit"
 
 describe('Testing the basic blocks', () => {
     before(() => {
@@ -33,10 +33,15 @@ describe('Testing the basic blocks', () => {
             cy.get(SitemapPanel.createPageLink).contains('Empty Page').click()
         })
     })
+
     describe('testing content block', () => {
         it('adds the content to block to main area', () => {
             cy.get(Area.zoneHandle('Main')).click('bottom')
+            cy.intercept('*ccm/system/panels/add*&tab=blocks').as('addPanel')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
+            cy.get(AddPanel.dropdownToggle).should('be.visible').click()
+            cy.get(AddPanel.dropdownItemBlocks).click() // reset to blocks
+            cy.wait('@addPanel')
             cy.get(Block.tile('content')).click('bottom')
             cy.get(ckEditor.saveButton).should('be.visible')
             cy.focused().as('ckEditor').click()
@@ -157,6 +162,7 @@ describe('Testing the basic blocks', () => {
             it('saves the block', () => {
                 cy.get(ckEditor.saveButton).should('be.visible').click('bottom')
                 cy.get(Notification.success).should('be.visible')
+                cy.get(Notification.close).click()
             })
         })
 
@@ -166,7 +172,11 @@ describe('Testing the basic blocks', () => {
     describe('testing html block', () => {
         it('adds the html to block to main area', () => {
             cy.get(Area.zoneHandle('Main')).click('bottom')
+            cy.intercept('*ccm/system/panels/add*&tab=blocks').as('addPanel')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
+            cy.get(AddPanel.dropdownToggle).should('be.visible').click()
+            cy.get(AddPanel.dropdownItemBlocks).click()
+            cy.wait('@addPanel')
             cy.get(Block.tile('html')).click('bottom')
         })
         it('enters partial html', () => {
@@ -191,11 +201,274 @@ describe('Testing the basic blocks', () => {
             cy.get(Dialog.dangerButton).click()
         })
 
+    })
+
+    describe('testing image block', () => {
+        it('adds the image to block to main area', () => {
+            cy.get(Area.zoneHandle('Page Footer')).click('bottom')
+            cy.intercept('*ccm/system/panels/add*&tab=blocks').as('addPanel')
+            cy.get(Area.popoverMenuAddBlock).click('bottom')
+            cy.get(AddPanel.dropdownToggle).should('be.visible').click()
+            cy.get(AddPanel.dropdownItemBlocks).click()
+            cy.wait('@addPanel')
+            cy.get(Block.tile('image')).click('bottom')
+        })
+        it('it adds an image from table view', () => {
+            cy.fileManager('open')
+            cy.get(FileSelect.menuItem).contains('File Manager').click()
+            cy.get(FileSelect.sort).click()
+            cy.fileManager('select', 'subway')
+        })
+        it('it adds a hover image from recent uploads', () => {
+            cy.fileManager('open', 'fOnstateID')
+            cy.get(FileSelect.menuItem).contains('File Manager').click()
+            cy.fileManager('select', 'houses')
+        })
+        it('it adds an external link', () => {
+            cy.get(Block.dialog + ' ' + Form.select('imageLink__which')).select('External URL')
+            cy.get(Block.dialog + ' ' + Form.text('imageLink_external_url')).click('bottom').type('https://google.com')
+            cy.get(Block.dialog + ' ' + Form.checkbox('openLinkInNewWindow')).click('bottom')
+
+        })
+        it('it adds alt text and a title', () => {
+            cy.get(Block.dialog + ' ' + Form.text('altText')).click('bottom').type('A nice picture of the subway')
+            cy.get(Block.dialog + ' ' + Form.text('title')).click('bottom').type('Subway TIME!')
+
+            cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+
+            cy.get(Block.addButton).click()
+            cy.wait('@blockLoad')
+            cy.get(Notification.success).should('be.visible')
+            cy.get(Notification.close).click()
+
+        })
+        it('validate images', () => {
+            cy.get(Area.zone('Page Footer')).find('div[data-block-type-handle="image"] img').as('sourceImage').should('have.attr', 'data-hover-src')
+            cy.get('@sourceImage').should('have.attr', 'data-default-src')
+            cy.get('@sourceImage').then($src => {
+                let picParent;
+                if ($src.parent()[0].nodeName.toLowerCase() === 'picture') {
+                    picParent = $src.parent().parent();
+                } else {
+                    picParent = $src.parent();
+                }
+                cy.wrap(picParent).should('have.attr', 'href').and('include', 'https://google.com')
+                cy.wrap(picParent).should('have.attr', 'target').and('include', '_blank')
+            })
+        })
+        it('reopens edit mode', () => {
+            cy.get(Area.zone('Page Footer')).find('div[data-block-type-handle="image"] img').as('sourceImage').should('be.visible')
+            cy.get('@sourceImage').then($src => {
+                let picParent;
+                if ($src.parent()[0].nodeName.toLowerCase() === 'picture') {
+                    picParent = $src.parent().parent().parent();
+                } else {
+                    picParent = $src.parent().parent();
+                }
+                cy.wrap(picParent).click()
+            })
+            cy.get(Block.popupEdit).click('bottom')
+            cy.get(Block.dialog).should('be.visible')
+        })
+        it('tests constrain image size and adds file link', () => {
+            cy.get(Block.dialog).should('be.visible')
+            cy.get(Block.dialog + ' ' + Form.checkbox('constrainImage')).scrollIntoView().click('bottom')
+            cy.get(Block.dialog + ' ' + Form.number('maxWidth')).scrollIntoView().click('bottom').type('150')
+            cy.get(Block.dialog + ' ' + Form.number('maxHeight')).scrollIntoView().click('bottom').type('150')
+            cy.get(Block.dialog + ' ' + Form.select('imageLink__which')).scrollIntoView().select('File')
+            cy.get(Block.dialog + ' ' + Form.checkbox('openLinkInNewWindow')).scrollIntoView().click('bottom')
+            cy.intercept('*/ccm/system/file/get_json*').as('fileLoad')
+            cy.fileManager('open', 'imageLink_file')
+            cy.fileManager('search', 'bridge', true)
+            cy.wait('@fileLoad')
+            cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+
+            cy.get(Block.addButton).click()
+            cy.wait('@blockLoad')
+            cy.get(Notification.success).should('be.visible')
+            cy.get(Notification.close).click()
+
+        })
+        it('validates the image size and file link', () => {
+            cy.get(Area.zone('Page Footer')).find('div[data-block-type-handle="image"] img').as('sourceImage2')
+            cy.get('@sourceImage2').then($src => {
+                let picParent;
+                if ($src.parent()[0].nodeName.toLowerCase() === 'picture') {
+                    picParent = $src.parent().parent();
+                } else {
+                    picParent = $src.parent();
+                }
+                cy.wrap(picParent).should('have.attr', 'href').and('include', '/bridge')
+                cy.wrap(picParent).should('not.have.attr', 'target')
+            })
+            cy.get('@sourceImage2').invoke('width').should('be.lte', 150)
+            cy.get('@sourceImage2').invoke('height').should('be.lte', 150)
+        })
+        it('reopens edit mode', () => {
+            cy.get(Area.zone('Page Footer')).find('div[data-block-type-handle="image"] img').as('sourceImage').should('be.visible')
+            cy.get('@sourceImage').then($src => {
+                let picParent;
+                if ($src.parent()[0].nodeName.toLowerCase() === 'picture') {
+                    picParent = $src.parent().parent().parent();
+                } else {
+                    picParent = $src.parent().parent();
+                }
+                cy.wrap(picParent).click()
+            })
+            cy.get(Block.popupEdit).click('bottom')
+            cy.get(Block.dialog).should('be.visible')
+        })
+
+        it('tests constrain image size and page link', () => {
+            cy.fileManager('clear', 'imageLink_file')
+            cy.get(Block.dialog + ' ' + Form.select('imageLink__which')).scrollIntoView().select('Page')
+            cy.intercept('*/ccm/system/page/sitemap_data*').as('loadSitemapData')
+            cy.sitemap('open', 'imageLink_page');
+            cy.wait('@loadSitemapData')
+            cy.sitemap('select', 'Home')
+            cy.get(Block.dialog + ' ' + Form.checkbox('cropImage')).click('bottom')
+            cy.get(Block.dialog + ' ' + Form.number('maxWidth')).scrollIntoView().click('bottom').clear().type('200')
+            cy.get(Block.dialog + ' ' + Form.number('maxHeight')).scrollIntoView().click('bottom').clear().type('200')
+            cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+
+            cy.get(Block.addButton).click()
+            cy.wait('@blockLoad')
+            cy.get(Notification.success).should('be.visible')
+            cy.get(Notification.close).click()
+            cy.get(Area.zone('Page Footer')).find('div[data-block-type-handle="image"] img').as('sourceImage3')
+            cy.get('@sourceImage3').then($src => {
+                let picParent;
+                if ($src.parent()[0].nodeName.toLowerCase() === 'picture') {
+                    picParent = $src.parent().parent();
+                } else {
+                    picParent = $src.parent();
+                }
+                cy.wrap(picParent).should('not.have.attr', 'target')
+            })
+            cy.get('@sourceImage3').invoke('width').should('equal', 200)
+            cy.get('@sourceImage3').invoke('height').should('equal', 200)
+        })
+
 
     })
+
+    describe('testing file block', () => {
+        it('adds the file to block to main area', () => {
+            cy.get(Area.zoneHandle('Main')).click('bottom')
+            cy.intercept('*ccm/system/panels/add*&tab=blocks').as('addPanel')
+            cy.get(Area.popoverMenuAddBlock).click('bottom')
+            cy.get(AddPanel.dropdownToggle).should('be.visible').click()
+            cy.get(AddPanel.dropdownItemBlocks).click()
+            cy.wait('@addPanel')
+            cy.get(Block.tile('file')).click('bottom')
+        })
+        it('selects a file', () => {
+            cy.get(Block.dialog).should('be.visible')
+            cy.fileManager('open')
+            cy.fileManager('select', 'balloon')
+            cy.get(Block.dialog + ' ' + Form.text('fileLinkText')).scrollIntoView().click('bottom').type('Hello my ballon')
+            cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+
+            cy.get(Block.addButton).click()
+            cy.wait('@blockLoad')
+            cy.get(Notification.success).should('be.visible')
+            cy.get(Notification.close).click()
+            cy.get(Area.zone('Main')).find('div.ccm-block-file a').as('fileBlock').should('have.attr', 'href').and('contain', '/download_file/')
+            cy.get('@fileBlock').should('contain.text', 'Hello my ballon')
+        })
+        it('enables force download', () => {
+            cy.get(Area.zone('Main')).find('div.ccm-block-file').should("be.visible").then($block => {
+                cy.wrap($block.parent()).click()
+            })
+            cy.get(Block.popupEdit).click('bottom')
+            cy.get(Block.dialog).should('be.visible')
+            cy.get(Block.dialog + ' ' + Form.checkbox('forceDownload')).scrollIntoView().click('bottom')
+            cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+            cy.get(Block.dialog + ' ' + Form.text('fileLinkText')).scrollIntoView().click('bottom').clear().type('Hello my ballon!!')
+            cy.get(Block.addButton).click()
+            cy.wait('@blockLoad')
+            cy.get(Notification.success).should('be.visible')
+            cy.get(Notification.close).click()
+            cy.get(Area.zone('Main')).find('div.ccm-block-file a').as('fileBlock').should('have.attr', 'href').and('contain', '/download_file/force/')
+            cy.get('@fileBlock').should('contain.text', 'Hello my ballon!!')
+        })
+        it('deletes the block', () => {
+            cy.get(Area.zone('Main')).find('div.ccm-block-file').should("be.visible").then($block => {
+                cy.wrap($block.parent()).click()
+            })
+            cy.get(Block.popupDelete).click()
+            cy.get(Dialog.dangerButton).click()
+        })
+
+    })
+
+    describe('testing hr block', () => {
+        it('adds the hr to block to main area', () => {
+            cy.get(Area.zoneHandle('Main')).click('bottom')
+            cy.intercept('*ccm/system/panels/add*&tab=blocks').as('addPanel')
+            cy.get(Area.popoverMenuAddBlock).click('bottom')
+            cy.get(AddPanel.dropdownToggle).should('be.visible').click()
+            cy.get(AddPanel.dropdownItemBlocks).click()
+            cy.wait('@addPanel')
+            cy.get(Block.tile('horizontal_rule')).click('bottom')
+            cy.get(Notification.success).should('be.visible')
+            cy.get(Notification.close).click()
+        })
+        it('copies the block', () => {
+            cy.get(Area.zone('Main')).find('div[data-block-type-handle="horizontal_rule"] hr').should("be.visible").then($block => {
+                cy.wrap($block.parent()).click()
+            })
+            cy.get(Block.popupCopy).click()
+            cy.get(Notification.success).should('be.visible')
+            cy.get(Notification.close).click()
+            cy.get(Area.zoneHandle('Page Footer')).click('bottom')
+            cy.get(Area.popoverMenuAddBlock).click('bottom')
+            cy.intercept('*ccm/system/panels/add*&tab=clipboard').as('addPanel')
+            cy.get(AddPanel.dropdownToggle).click()
+            cy.get(AddPanel.dropdownItemClipboard).click()
+            cy.wait('@addPanel')
+            cy.get(AddPanel.base + ' div[id="ccm-clipboard-container"] div[data-block-type-handle="horizontal_rule"]:first').click()
+            cy.get(Notification.success).should('be.visible')
+            cy.get(Notification.close).click()
+            cy.get(Area.zone('Page Footer')).find('div[data-block-type-handle="horizontal_rule"] hr').should("be.visible")
+
+        })
+        it('deletes the copy and clipboard', () => {
+            cy.get(Area.zone('Page Footer')).find('div[data-block-type-handle="horizontal_rule"] hr').should("be.visible").then($block => {
+                cy.wrap($block.parent()).click()
+            })
+            cy.get(Block.popupDelete).click()
+            cy.get(Dialog.dangerButton).click()
+            cy.get(Notification.success).should('be.visible')
+            cy.get(Notification.close).click()
+            cy.get(Toolbar.addBlock).click()
+            cy.intercept('*ccm/system/panels/add*&tab=*').as('addPanel')
+            cy.get(AddPanel.dropdownToggle).click()
+            cy.get(AddPanel.dropdownItemClipboard).click()
+            cy.wait('@addPanel')
+            cy.get(AddPanel.base + ' div[id="ccm-clipboard-container"] div[data-block-type-handle="horizontal_rule"]:first button.ccm-delete-clipboard-item').click()
+            cy.get(AddPanel.dropdownToggle).should('be.visible').click()
+            cy.get(AddPanel.dropdownItemBlocks).click() // reset to blocks
+            cy.wait('@addPanel')
+            cy.get(Toolbar.addBlock).click()
+        })
+        it('deletes the block', () => {
+            cy.get(Area.zone('Main')).find('div[data-block-type-handle="horizontal_rule"] hr').should("be.visible").then($block => {
+                cy.wrap($block.parent()).click()
+            })
+            cy.get(Block.popupDelete).click()
+            cy.get(Dialog.dangerButton).click()
+            cy.get(Notification.success).should('be.visible')
+            cy.get(Notification.close).click()
+        })
+
+
+    })
+
     describe('removes the edits', () => {
         it('discard the draft', () => {
             cy.get(Toolbar.pageSettings).click()
+            cy.on('window:confirm', () => true);
             cy.get(Composer.discard).click('bottom')
         })
     })

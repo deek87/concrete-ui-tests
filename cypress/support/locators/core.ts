@@ -32,11 +32,51 @@ export class Block {
 
 
 export class Form {
+    static pageSelectorBase: string = 'div[data-concrete-page-input] > div.ccm-item-selector-group'
+    static pageSelectorInput: string = Form.pageSelectorBase + ' > input'
+    static pageSelectorInputName(name: string): string {
+        return this.pageSelectorInput + '[name="' + name + '"]'
+    }
+
     static fileSelectorBase: string = 'div[data-concrete-file-input] > div.ccm-item-selector-group'
     static fileSelectorInput: string = Form.fileSelectorBase + ' > input'
     static fileSelectorInputName(name: string): string {
         return this.fileSelectorInput + '[name="' + name + '"]'
     }
+    static select(name: string): string {
+        return 'div.form-group > select.form-control[name="' + name + '"]'
+    }
+    static text(name: string): string {
+        return 'div.form-group input[type="text"].form-control[name="' + name + '"]'
+    }
+    static number(name: string): string {
+        return 'div.form-group input[type="number"].form-control[name="' + name + '"]'
+    }
+    static checkbox(name: string): string {
+        return 'div.form-group input[type="checkbox"].form-check-input[name="' + name + '"]'
+    }
+
+}
+
+export class Sitemap {
+    static base: string = 'div.ccm-sitemap-wrapper'
+    static treeSelector: string = Sitemap.base + ' div.ccm-sitemap-tree-selector-wrapper'
+    static treeOpen: string = Sitemap.treeSelector + ' div.dropdown button'
+    static list: string = ''
+    static tree: string = Sitemap.base + ' div.ccm-sitemap-tree > ul'
+    static treeItem: string = Sitemap.tree + ' li[role=treeitem] > span.fancytree-node'
+    static treeLabel: string = Sitemap.treeItem + ' > span.fancytree-title'
+}
+
+
+export class PageSelect {
+    static base: string = 'div[id="ccm-sitemap-search-selector"] div.container-fluid > div.row'
+    static menuBase: string = PageSelect.base + ' > div.col-4.border-right > ul'
+    static menuItem: string = PageSelect.menuBase + ' > li.nav-item > a.nav-link'
+    static searchBase: string = PageSelect.base + ' div[data-concrete-page-chooser-search]'
+    static searchForm: string = PageSelect.searchBase + ' form'
+    static search: string = PageSelect.searchForm + ' div.ccm-header-search-form-input input[type=text]'
+    static searchSubmit: string = PageSelect.searchForm + ' div.ccm-header-search-form-input button[type=submit]'
 }
 
 export class FileSelect {
@@ -100,7 +140,8 @@ export class Area {
 export class Notification {
     static success: string = 'div[role="alertdialog"] > div.ccm-notification-success'
     static info: string = 'div[role="alertdialog"] > div.ccm-notification-info'
-    static infoButtonContainer: string = Notification.info + ' > div.ccm-notification-content > div.ccm-notification-text > div.ccm-notification-inner-buttons';
-    static infoPrimaryButton: string = Notification.infoButtonContainer + ' a.btn.btn-primary';
+    static infoButtonContainer: string = Notification.info + ' > div.ccm-notification-content > div.ccm-notification-text > div.ccm-notification-inner-buttons'
+    static infoPrimaryButton: string = Notification.infoButtonContainer + ' a.btn.btn-primary'
+    static close: string = 'div[role="alertdialog"] div.ccm-notification-closer'
 
 }

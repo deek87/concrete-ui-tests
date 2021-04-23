@@ -25,6 +25,9 @@ This is currently a work in progress
 - [x] Add blocks via area menu
 - [x] Deleting blocks via block menu
 - [x] Editing via block menu
+- [x] Copying to clipboard via block menu
+- [x] Adding via clipboard
+- [x] Removing from clipboard
 
 ### Implemented Blocks
 
@@ -46,15 +49,21 @@ The following is a list of blocks that have been implemented and what is tested
 ##### Image Block
 
 - [x] Adding image
-- [ ] Adding link
-  - [ ] Page
-  - [ ] External
-  - [ ] File
-- [ ] Adding hover
-- [ ] Alt Text
-- [ ] Title
-- [ ] Constrain Image
-  - [ ] Crop Image
+- [x] Adding link
+  - [x] Page
+  - [x] External
+  - [x] File
+- [x] Adding hover
+- [x] Alt Text
+- [x] Title
+- [x] Constrain Image
+  - [x] Crop Image
+
+##### File Block
+
+- [x] Selecting file
+- [x] Entering Text
+- [x] Forcing download
 
 ## Form Features
 
@@ -63,4 +72,11 @@ The following is a list of blocks that have been implemented and what is tested
 - [x] Searching for files
 - [x] Selecting files via name or fileID
 - [x] Change from grid to table
-- [ ] Select via table
+- [x] Select via table
+
+### PageSelector Features
+
+- [x] Searching for pages
+- [x] Selecting pages via name
+- [ ] Navigate site
+- [ ] Multilingual selection

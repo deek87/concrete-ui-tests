@@ -8,7 +8,7 @@ Cypress.Commands.add('selectFile', (file: string | number) => {
 
 Cypress.Commands.add('fileManager', (method: string, ...args: any[]) => {
 
-    if (method.toLowerCase().replace(/\_\s/ig, '') === 'selectfile') {
+    if (method.toLowerCase().replace(/\_\s/ig, '') === 'selectfile' || method.toLowerCase().replace(/\_\s/ig, '') === 'select') {
         selectFile(args[0])
     }
 
@@ -23,8 +23,19 @@ Cypress.Commands.add('fileManager', (method: string, ...args: any[]) => {
     if (method.toLowerCase().replace(/\_\s/ig, '') === 'searchandselect' || method.toLowerCase().replace(/\_\s/ig, '') === 'searchselect') {
         searchFile(args[0], true)
     }
-
+    if (method.toLowerCase().replace(/\_\s/ig, '') === 'clear' || method.toLowerCase().replace(/\_\s/ig, '') === 'clearfile') {
+        clearFile(args[0])
+    }
 })
+
+function clearFile(name: string = null) {
+    if (name === null) {
+        name = 'fID'
+    }
+    cy.get(Form.fileSelectorInputName(name)).then($fileSelect => {
+        $fileSelect.next().find('button.ccm-item-selector-reset').trigger('click')
+    })
+}
 
 
 function openFileManager(name: string = null) {
@@ -57,7 +68,7 @@ function selectFile(file: string | number) {
 
 function searchFile(fileName: string, select: boolean = false) {
     selectSideMenu('Search')
-    cy.get(FileSelect.search).scrollIntoView().type(fileName)
+    cy.get(FileSelect.search).scrollIntoView().clear().type(fileName)
     cy.get(FileSelect.searchSubmit).click('bottom')
     if (select) {
         selectFile(fileName)
