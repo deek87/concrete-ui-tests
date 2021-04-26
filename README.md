@@ -35,6 +35,8 @@ The following is a list of blocks that have been implemented and what is tested
 
 #### Basics
 
+- [x] All basic block types tested
+
 ##### Content Block
 
 - [x] Formating Styles
@@ -64,6 +66,13 @@ The following is a list of blocks that have been implemented and what is tested
 - [x] Selecting file
 - [x] Entering Text
 - [x] Forcing download
+
+#### Navigation
+
+##### FAQ Block
+
+- [x] Adding Entries
+- [x] Removing Entries
 
 ## Form Features
 

@@ -12,6 +12,8 @@ declare namespace Cypress {
         drag(dragSelector: string, dropSelector: string): Chainable<Element>
         fileManager(method: string, ...args: any[]): void
         sitemap(method: string, ...args: any[]): void
+        saveBlock(): void
+        deleteBlock(): void
         setSelection(selection: string)
         selection(fn: (currentSubject: JQuery<Element>) => void): Chainable<Element>
         setCursor(selection: string, setAfter?: boolean)

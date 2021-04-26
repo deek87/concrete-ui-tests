@@ -25,7 +25,11 @@ export class Block {
     static popupAdvanced: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href$="/ccm/system/dialogs/block/cache"]'
     static popupPermissions: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href$="/ccm/system/dialogs/block/permissions/list"]'
     static popupGuest: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href$="/ccm/system/dialogs/block/permissions/guest_access"]'
-
+    static designBase: string = 'form[id="ccm-inline-design-form"][data-target-element=block] ul.ccm-style-customizer-toolbar'
+    static designTemplateList: string = Block.designBase + ' li.ccm-inline-toolbar-select button.dropdown-toggle'
+    static designTemplateItem: string = Block.designBase + ' li.ccm-inline-toolbar-select div.dropdown-menu ul.dropdown-menu.inner li a[role=option] span'
+    static designCancel: string = Block.designBase + '>li.ccm-inline-toolbar-button.ccm-inline-toolbar-button-cancel>input[type=button][data-action=cancel-design]'
+    static designSave: string = Block.designBase + '>li.ccm-inline-toolbar-button.ccm-inline-toolbar-button-save>input[type=button][data-action=save-design]'
 }
 
 
@@ -44,7 +48,7 @@ export class Form {
         return this.fileSelectorInput + '[name="' + name + '"]'
     }
     static select(name: string): string {
-        return 'div.form-group > select.form-control[name="' + name + '"]'
+        return 'div.form-group select.form-control[name="' + name + '"]'
     }
     static text(name: string): string {
         return 'div.form-group input[type="text"].form-control[name="' + name + '"]'
@@ -54,6 +58,12 @@ export class Form {
     }
     static checkbox(name: string): string {
         return 'div.form-group input[type="checkbox"].form-check-input[name="' + name + '"]'
+    }
+    static richTextArea(name: string): string {
+        return 'div.form-group textarea[name="' + name + '"] + div.cke div[contenteditable="true"]'
+    }
+    static textArea(name: string): string {
+        return 'div.form-group textarea[name="' + name + '"]'
     }
 
 }

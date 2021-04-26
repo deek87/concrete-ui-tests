@@ -465,6 +465,74 @@ describe('Testing the basic blocks', () => {
 
     })
 
+    describe('testing feature block', () => {
+        it('adds the feature to block to main area', () => {
+            cy.get(Area.zoneHandle('Page Footer')).click('bottom')
+            cy.intercept('*ccm/system/panels/add*&tab=blocks').as('addPanel')
+            cy.get(Area.popoverMenuAddBlock).click('bottom')
+            cy.get(AddPanel.dropdownToggle).should('be.visible').click()
+            cy.get(AddPanel.dropdownItemBlocks).click()
+            cy.wait('@addPanel')
+            cy.get(Block.tile('feature')).click('bottom')
+        })
+        it('it selects an icon', () => {
+            cy.get(Block.dialog + ' ' + Form.select('icon')).select('fas fa-home')
+            cy.get(Block.dialog + ' i.fa-home.fa-fas').should('be.visible')
+        })
+        it('it sets a title', () => {
+            cy.get(Block.dialog + ' ' + Form.select('titleFormat')).select('h4')
+            cy.get(Block.dialog + ' ' + Form.text('title')).click('bottom').type('Test Feature')
+        })
+
+        it('it enters a discription', () => {
+            cy.get(Block.dialog + ' ' + Form.richTextArea('paragraph')).scrollIntoView().click().type('Test Description....{shift}{enter}YEAH!')
+        })
+        it('it adds a link', () => {
+            cy.get(Block.dialog + ' ' + Form.select('linkType')).scrollIntoView().select('External URL')
+            cy.get(Block.dialog + ' ' + Form.text('externalLink')).scrollIntoView().click('bottom').type('https://google.com')
+            cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+
+            cy.get(Block.addButton).click()
+            cy.wait('@blockLoad')
+            cy.get(Notification.success).should('be.visible')
+            cy.get(Notification.close).click()
+
+        })
+        it('validates the feature block', () => {
+            cy.get('div.ccm-block-feature-item h4 i.fas.fa-home').should('be.visible')
+            cy.get('div.ccm-block-feature-item h4 i.fas.fa-home + a').should('have.attr', 'href').and('include', 'https://google.com')
+            cy.get('div.ccm-block-feature-item h4 + p').should('contain.text', 'Test Description....')
+        })
+        it('changes the design of the block', () => {
+
+            cy.get(Area.zone('Page Footer') + ' div[data-block-type-handle="feature"]').click()
+            cy.intercept('*/ccm/system/dialogs/block/design*').as('blockDesign');
+            cy.get(Block.popupDesign).click()
+            cy.wait('@blockDesign')
+            cy.get(Block.designBase).should('be.visible')
+            cy.get(Block.designTemplateList).click('bottom')
+            cy.get(Block.designTemplateItem).contains('Hover Description').click()
+            cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+
+            cy.get(Block.designSave).click()
+            cy.wait('@blockLoad')
+            cy.get(Notification.success).should('be.visible')
+            cy.get(Notification.close).click()
+            cy.get(Area.zone('Page Footer') + ' div[data-block-type-handle="feature"] > a').should('have.attr', 'href').and('include', 'https://google.com')
+            cy.get(Area.zone('Page Footer') + ' div[data-block-type-handle="feature"] > a div.ccm-block-feature-item-hover-wrapper').should('have.attr', 'data-original-title').and('include', 'Test Description....')
+            cy.get(Area.zone('Page Footer') + ' div[data-block-type-handle="feature"] > a div.ccm-block-feature-item-hover-wrapper > div.ccm-block-feature-item-hover-title').contains('Test Feature')
+            cy.get(Area.zone('Page Footer') + ' div[data-block-type-handle="feature"] > a div.ccm-block-feature-item-hover-wrapper > div.ccm-block-feature-item-hover > div.ccm-block-feature-item-hover-icon > i').should('have.class', 'fa-home')
+        })
+        it('deletes the block', () => {
+            cy.get(Area.zone('Page Footer') + ' div[data-block-type-handle="feature"]').click()
+            cy.get(Block.popupDelete).click()
+            cy.get(Dialog.dangerButton).click()
+            cy.get(Notification.success).should('be.visible')
+            cy.get(Notification.close).click()
+        })
+
+    })
+
     describe('removes the edits', () => {
         it('discard the draft', () => {
             cy.get(Toolbar.pageSettings).click()
