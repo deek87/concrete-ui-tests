@@ -53,6 +53,9 @@ export class Form {
     static text(name: string): string {
         return 'div.form-group input[type="text"].form-control[name="' + name + '"]'
     }
+    static input(name: string): string {
+        return 'div.form-group input.form-control[name="' + name + '"]'
+    }
     static number(name: string): string {
         return 'div.form-group input[type="number"].form-control[name="' + name + '"]'
     }
@@ -153,5 +156,35 @@ export class Notification {
     static infoButtonContainer: string = Notification.info + ' > div.ccm-notification-content > div.ccm-notification-text > div.ccm-notification-inner-buttons'
     static infoPrimaryButton: string = Notification.infoButtonContainer + ' a.btn.btn-primary'
     static close: string = 'div[role="alertdialog"] div.ccm-notification-closer'
+
+}
+
+export class Dashboard {
+    static content: string = 'div[id="ccm-dashboard-content"]'
+    static page: string = 'div[id="ccm-dashboard-page"]'
+    static header: string = Dashboard.content + ' header'
+    static bookmark: string = Dashboard.header + ' a[data-bookmark-action]'
+    static bookmarkIcon: string = Dashboard.bookmark + ' svg.icon-bookmark'
+    static bookmarkAdd: string = Dashboard.header + ' a[data-bookmark-action="add-favorite"]'
+    static bookmarkRemove: string = Dashboard.header + ' a[data-bookmark-action="remove-favorite"]'
+    static contentRegular: string = Dashboard.content + ' div[id="ccm-dashboard-content-regular"]'
+    static panel: string = 'div[id="ccm-panel-dashboard"]'
+    static panelContent: string = Dashboard.panel + ' div.ccm-panel-content.ccm-panel-content-visible:visible'
+    static activeMenu: string = Dashboard.panelContent + ' div:visible > ul.nav.flex-column'
+    static activeMenuItem: string = Dashboard.activeMenu + ' > li > a'
+    static favouriteMenu: string = Dashboard.panelContent + ' menu.ccm-panel-dashboard-favorites-menu'
+    static favouriteMenuItem: string = Dashboard.favouriteMenu + ' li'
+    static dashboardPanelSelect: string = Dashboard.favouriteMenu + ' > li > a[id="panel-dashboard-dashboard"]'
+    static favouritePanelSelect: string = Dashboard.favouriteMenu + ' > li > a[id="panel-dashboard-favorites"]'
+    static favoritePanelSelect: string = Dashboard.favouriteMenu + ' > li > a[id="panel-dashboard-favorites"]' // American Spelling...
+    static toolbar: string = Dashboard.page + ' div[id="ccm-toolbar"]' // The Dashboard toolbar is different from the normal ccm-toolbar -_-
+    static toolbarItem: string = Dashboard.toolbar + ' > ul > li'
+    static toolbarLogo: string = Dashboard.toolbarItem + '.ccm-logo img'
+    static toolbarBackToSite: string = Dashboard.toolbarItem + ':nth-child(2) span'
+    static toolbarSite: string = Dashboard.toolbarItem + ' div.ccm-menu-item-site-list-container'
+    static toolbarHelp: string = Dashboard.toolbarItem + '[data-guide-toolbar-action="help"] > a'
+    static toolbarSearch: string = Dashboard.toolbarItem + '.ccm-toolbar-search input[id="ccm-nav-intelligent-search"]'
+    static toolbarPanel: string = Dashboard.toolbarItem + ' > a[data-launch-panel="dashboard"]'
+    static toolbarAddPage: string = Dashboard.toolbarItem + ' > a[data-launch-panel="sitemap"]'
 
 }

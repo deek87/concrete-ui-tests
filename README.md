@@ -6,6 +6,12 @@ This is a series of User Interface tests for version 9 of concrete5/concretecms
 
 This is currently a work in progress
 
+## Dashboard Features
+
+- [x] Bookmarking and Removing bookmarks
+- [x] Navigating panel
+- [x] Toolbar for dashboard
+
 ## Page Features
 
 - [x] Adding Page via composer
@@ -66,6 +72,17 @@ The following is a list of blocks that have been implemented and what is tested
 - [x] Selecting file
 - [x] Entering Text
 - [x] Forcing download
+
+##### Feature Block
+
+- [x] Selecting icon
+- [x] Adding description
+- [x] Adding link
+- [x] Adding description
+- [x] Changing template
+- [x] Adding link
+  - [x] Page
+  - [x] External
 
 #### Navigation
 

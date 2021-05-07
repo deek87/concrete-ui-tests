@@ -85,10 +85,51 @@ describe('Testing the navigation blocks', () => {
         })
     })
 
+    describe('testing RSS Displayer block', () => {
+        it('adds the RSS Displayer to block to main area', () => {
+            cy.get(Area.zoneHandle('Main')).click('bottom')
+            cy.intercept('*ccm/system/panels/add*&tab=blocks').as('addPanel')
+            cy.get(Area.popoverMenuAddBlock).click('bottom')
+            cy.get(AddPanel.dropdownToggle).should('be.visible').click()
+            cy.get(AddPanel.dropdownItemBlocks).click() // reset to blocks
+            cy.wait('@addPanel')
+            cy.get(Block.tile('rss_displayer')).scrollIntoView().click('bottom')
+
+        })
+        it('sets the feed url', () => {
+
+            cy.get(Block.dialog + ' ' + Form.text('url') + ':last').scrollIntoView().type('https://www.feedforall.com/sample.xml')
+
+        })
+        it('sets the title', () => {
+            cy.get(Block.dialog + ' ' + Form.input('title') + ':last').scrollIntoView().type('Test Feed')
+            cy.get(Block.dialog + ' ' + Form.select('titleFormat')).select('h2')
+        })
+        it('sets the date format', () => {
+            cy.get(Block.dialog + ' ' + Form.select('standardDateFormat')).select(':custom:')
+            cy.get(Block.dialog + ' ' + Form.text('customDateFormat') + ':last').scrollIntoView().type('Y/m/d')
+        })
+        it('sets the items', () => {
+            cy.get(Block.dialog + ' ' + Form.input('itemsToDisplay') + ':last').scrollIntoView().clear().type('4')
+        })
+
+        it('validates the block', () => {
+            cy.saveBlock()
+            cy.get(Area.zone('Main') + ' div.ccm-block-rss-displayer-wrapper > div.ccm-block-rss-displayer').as('rss-wrapper').should('be.visible')
+            cy.get('@rss-wrapper').find('div.ccm-block-rss-displayer-header h2').should('be.visible').contains('Test Feed')
+            cy.get('@rss-wrapper').find('div.ccm-block-rss-displayer-item').should('have.length', '4')
+            cy.get('@rss-wrapper').find('div.ccm-block-rss-displayer-item-date').first().contains('2004/10/20')
+        })
+        it('deletes the block', () => {
+            cy.get(Area.zone('Main') + '  div[data-block-type-handle="rss_displayer"]').click()
+            cy.deleteBlock()
+        })
+    })
+
     describe('removes the edits', () => {
         it('discard the draft', () => {
             cy.get(Toolbar.pageSettings).click()
-            cy.on('window:confirm', () => true);
+            cy.on('window:confirm', () => true)
             cy.get(Composer.discard).click('bottom')
         })
     })
