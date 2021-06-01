@@ -26,6 +26,12 @@ jobs:
           # Opens tcp port 6379 on the host and service container
           - 8080:80 
           - 33306:3306
+        options: >-
+          --health-cmd "echo test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          -d
     runs-on: ubuntu-latest
     container: cypress/browsers:node14.15.0-chrome86-ff82
     steps:
@@ -36,7 +42,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           runTests: false
-          wait-on: 'http://0.0.0.0:8080'
+          wait-on: 'http://concrete:8080'
 
       - name: General debug information
         run: |
@@ -66,7 +72,7 @@ jobs:
 #         uses: cypress-io/github-action@v2
 #         with:
 #           runTests: false
-#           wait-on: 'http://0.0.0.0:8080'
+#           wait-on: 'http://concrete:8080'
 # 
 #       - name: General debug information
 #         run: |
@@ -95,7 +101,7 @@ jobs:
       - name: "UI Tests - Chrome"
         uses: cypress-io/github-action@v2
         with:
-          wait-on: "http://0.0.0.0:8080"
+          wait-on: "http://concrete:8080"
           wait-on-timeout: 120
           browser: chrome
           record: true
@@ -133,7 +139,7 @@ jobs:
 #         with:
 #           config: "viewportWidth=375,viewportHeight=667"
 #           start: yarn start:ci
-#           wait-on: "http://0.0.0.0:8080"
+#           wait-on: "http://concrete:8080"
 #           wait-on-timeout: 120
 #           browser: chrome
 #           record: true
@@ -160,7 +166,7 @@ jobs:
       - name: "UI Tests - Firefox"
         uses: cypress-io/github-action@v2
         with:
-          wait-on: "http://0.0.0.0:8080"
+          wait-on: "http://concrete:8080"
           wait-on-timeout: 120
           browser: firefox
           record: true
@@ -200,7 +206,7 @@ jobs:
 #         with:
 #           config: "viewportWidth=375,viewportHeight=667"
 #           start: yarn start:ci
-#           wait-on: "http://0.0.0.0:8080"
+#           wait-on: "http://concrete:8080"
 #           wait-on-timeout: 120
 #           browser: firefox
 #           record: true
