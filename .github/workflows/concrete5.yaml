@@ -69,14 +69,6 @@ jobs:
           build: npm install
           runTests: false
           wait-on: 'http://localhost:8080'
-
-      - name: Save build folder
-        uses: actions/upload-artifact@v2
-        with:
-          name: build
-          if-no-files-found: error
-          path: ./
-
       
 
 #   install-windows:
@@ -123,11 +115,8 @@ jobs:
     container: cypress/browsers:node14.15.0-chrome86-ff82
     needs: install-latest
     steps:  
-      - name: Download the build folders
-        uses: actions/download-artifact@v2
-        with:
-          name: build
-          path: ./
+      - name: Install again
+        run: npm ci
       - name: "UI Tests - ${{ matrix.browser }} - latest"
         uses: cypress-io/github-action@v2
         with:
@@ -152,6 +141,8 @@ jobs:
     container: cypress/browsers:node14.15.0-chrome86-ff82
     needs: install-develop
     steps:  
+      - name: Install again
+        run: npm ci
       - name: "UI Tests - ${{ matrix.browser }} - develop"
         uses: cypress-io/github-action@v2
         with:
