@@ -34,7 +34,6 @@ jobs:
     needs: install-concrete-cms
     container: cypress/browsers:node14.15.0-chrome86-ff82
     steps:
-      - name: Install C5 Docker
       - name: Checkout
         uses: actions/checkout@v2
 
