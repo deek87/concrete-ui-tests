@@ -115,8 +115,8 @@ jobs:
     container: cypress/browsers:node14.15.0-chrome86-ff82
     needs: install-latest
     steps:  
-      - name: Install again
-        run: npm ci
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: "UI Tests - ${{ matrix.browser }} - latest"
         uses: cypress-io/github-action@v2
         with:
@@ -141,8 +141,8 @@ jobs:
     container: cypress/browsers:node14.15.0-chrome86-ff82
     needs: install-develop
     steps:  
-      - name: Install again
-        run: npm ci
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: "UI Tests - ${{ matrix.browser }} - develop"
         uses: cypress-io/github-action@v2
         with:
