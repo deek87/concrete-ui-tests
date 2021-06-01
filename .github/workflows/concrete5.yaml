@@ -55,12 +55,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Cypress install
-        uses: cypress-io/github-action@v2
-        with:
-          runTests: false
-          wait-on: 'http://localhost:8080'
-
       - name: General debug information
         run: |
           npm --version
@@ -68,6 +62,15 @@ jobs:
           curl --version
           git --version
           svn --version
+
+      - name: Cypress install
+        uses: cypress-io/github-action@v2
+        with:
+          build: npm install
+          runTests: false
+          wait-on: 'http://localhost:8080'
+
+      
 
 #   install-windows:
 #     runs-on: windows-2019
