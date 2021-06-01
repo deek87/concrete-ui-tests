@@ -113,6 +113,9 @@ jobs:
       matrix:
         browser: [firefox, chrome]
     container: cypress/browsers:node14.15.0-chrome86-ff82
+    services:
+      concrete: 
+          image: mlocati/docker5:latest-full
     needs: install-latest
     steps:  
       - name: Checkout
