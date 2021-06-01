@@ -119,6 +119,7 @@ jobs:
       - name: "UI Tests - ${{ matrix.browser }} - latest"
         uses: cypress-io/github-action@v2
         with:
+          build: npm install
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
@@ -142,6 +143,7 @@ jobs:
       - name: "UI Tests - ${{ matrix.browser }} - develop"
         uses: cypress-io/github-action@v2
         with:
+          build: npm install
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
