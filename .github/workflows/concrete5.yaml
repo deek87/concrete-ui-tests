@@ -111,7 +111,7 @@ jobs:
       matrix:
         browser: [firefox, chrome]
     container: cypress/browsers:node14.15.0-chrome86-ff82
-    needs: install-concrete-latest
+    needs: install-latest
     steps:  
       - name: "UI Tests - ${{ matrix.browser }} - latest"
         uses: cypress-io/github-action@v2
@@ -134,7 +134,7 @@ jobs:
       matrix:
         browser: [firefox, chrome]
     container: cypress/browsers:node14.15.0-chrome86-ff82
-    needs: install-concrete-develop
+    needs: install-develop
     steps:  
       - name: "UI Tests - ${{ matrix.browser }} - develop"
         uses: cypress-io/github-action@v2
