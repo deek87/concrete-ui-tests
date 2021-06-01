@@ -36,7 +36,6 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           runTests: false
-          build: npm run build
           wait-on: 'http://localhost:8080'
 
       - name: General debug information
@@ -47,50 +46,42 @@ jobs:
           git --version
           svn --version
 
-      - name: Save build folder
-        uses: actions/upload-artifact@v2
-        with:
-          name: build
-          if-no-files-found: error
-          path: build
-
-  install-windows:
-    runs-on: windows-2019
-    services:
-      # Label used to access the service container
-      concrete:
-        # Docker Hub image
-        image: mlocati/docker5:develop
-        #
-        ports:
-          # Opens tcp port 6379 on the host and service container
-          - 8080:80 
-          - 33306:3306
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Cypress install
-        uses: cypress-io/github-action@v2
-        with:
-          runTests: false
-          build: npm run build
-          wait-on: 'http://localhost:8080'
-
-      - name: General debug information
-        run: |
-          npm --version
-          node --version
-          curl --version
-          git --version
-          svn --version
-
-      - name: Save build folder
-        uses: actions/upload-artifact@v2
-        with:
-          name: build
-          if-no-files-found: error
-          path: build
+#   install-windows:
+#     runs-on: windows-2019
+#     services:
+#       # Label used to access the service container
+#       concrete:
+#         # Docker Hub image
+#         image: mlocati/docker5:develop
+#         #
+#         ports:
+#           # Opens tcp port 6379 on the host and service container
+#           - 8080:80 
+#           - 33306:3306
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v2
+# 
+#       - name: Cypress install
+#         uses: cypress-io/github-action@v2
+#         with:
+#           runTests: false
+#           wait-on: 'http://localhost:8080'
+# 
+#       - name: General debug information
+#         run: |
+#           npm --version
+#           node --version
+#           curl --version
+#           git --version
+#           svn --version
+# 
+#       - name: Save build folder
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: build
+#           if-no-files-found: error
+#           path: build
 
   ui-chrome-tests:
     timeout-minutes: 15
@@ -100,12 +91,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Download the build folders
-        uses: actions/download-artifact@v2
-        with:
-          name: build
-          path: build
 
       - name: "UI Tests - Chrome"
         uses: cypress-io/github-action@v2
@@ -172,12 +157,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Download the build folders
-        uses: actions/download-artifact@v2
-        with:
-          name: build
-          path: build
-
       - name: "UI Tests - Firefox"
         uses: cypress-io/github-action@v2
         with:
@@ -234,31 +213,31 @@ jobs:
 #           # determine the unique run id necessary to re-run the checks
 #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  ui-windows-tests:
-    timeout-minutes: 40
-    runs-on: windows-2019
-    needs: install-windows
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Download the build folders
-        uses: actions/download-artifact@v2
-        with:
-          name: build
-          path: build
-
-      - name: "UI Tests - Electron - Windows"
-        uses: cypress-io/github-action@v2
-        with:
-          start: yarn start:ci
-          wait-on: "http://localhost:8080"
-          wait-on-timeout: 120
-          record: true
-          group: "UI - Electron - Windows"
-          spec: cypress/tests/ui/*
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          # Recommended: pass the GitHub token lets this action correctly
-          # determine the unique run id necessary to re-run the checks
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#   ui-windows-tests:
+#     timeout-minutes: 40
+#     runs-on: windows-2019
+#     needs: install-windows
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v2
+# 
+#       - name: Download the build folders
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: build
+#           path: build
+# 
+#       - name: "UI Tests - Electron - Windows"
+#         uses: cypress-io/github-action@v2
+#         with:
+#           start: yarn start:ci
+#           wait-on: "http://localhost:8080"
+#           wait-on-timeout: 120
+#           record: true
+#           group: "UI - Electron - Windows"
+#           spec: cypress/tests/ui/*
+#         env:
+#           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+#           # Recommended: pass the GitHub token lets this action correctly
+#           # determine the unique run id necessary to re-run the checks
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
