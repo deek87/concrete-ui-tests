@@ -17,12 +17,20 @@ concurrency:
 jobs:
 
   install-concrete-cms:
+    strategy:
+      
+      matrix:
+        concreteVersion: [latest, develop]
     runs-on: ubuntu-latest
     steps:
-      - name: Build Docker Image
-        run: docker image build -t docker5:develop
-      - name: Setup Concrete5
-        run: docker run -d -p 8080:80 docker5:develop
+      - name: Setup ConcreteCMS Latest Version
+      - if: matrix.concreteVersion == 'latest'
+        run: docker run -d -p 8080:80 mlocati/docker5:latest-full
+      
+      - name: Setup ConcreteCMS Develop Branch
+      - if: matrix.concreteVersion == 'develop'
+        run: docker run -d -p 8080:80 mlocati/docker5:develop-full
+
       - name: Wait for Server
         run: |
           until $(echo | nc localhost 8080); do sleep 1; echo waiting for concreteCMS on port 8080...; done;
