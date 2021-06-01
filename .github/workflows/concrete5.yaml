@@ -41,6 +41,7 @@ jobs:
           curl --version
           git --version
           svn --version
+
   install-develop:
     runs-on: ubuntu-latest
     steps:
@@ -120,22 +121,6 @@ jobs:
           browser: ${{ matrix.browser }}
           record: true
           group: "UI - ${{ matrix.browser }} : ConcreteCMS - Latest Release "
-          spec: cypress/integration/*
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          # Recommended: pass the GitHub token lets this action correctly
-          # determine the unique run id necessary to re-run the checks
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: "UI Tests - Firefox"
-      - if:  matrix.browser == 'firefox'
-        uses: cypress-io/github-action@v2
-        with:
-          wait-on: "http://localhost:8080"
-          wait-on-timeout: 120
-          browser: firefox
-          record: true
-          group: "UI - Firefox"
           spec: cypress/integration/*
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
