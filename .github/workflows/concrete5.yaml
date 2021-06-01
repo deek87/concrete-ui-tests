@@ -15,17 +15,37 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
-  TestUI:
+  install-latest:
     runs-on: ubuntu-latest
-    strategy:      
-      matrix:
-        concreteVersion: [develop, latest]
-        browser: [firefox, chrome]
-    container: cypress/browsers:node14.15.0-chrome86-ff82
     steps:
       - name: Setup ConcreteCMS
-        run: docker run -d -p 8080:80 mlocati/docker5:${{ matrix.concreteVersion }}-full
+        run: docker run -d -p 8080:80 mlocati/docker5:latest-full
+
+      - name: Wait for Server
+        run: |
+          until $(echo | nc localhost 8080); do sleep 1; echo waiting for concreteCMS on port 8080...; done;
+          echo "concreteCMS Server started"
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cypress install
+        uses: cypress-io/github-action@v2
+        with:
+          runTests: false
+          wait-on: 'http://localhost:8080'
+
+      - name: General debug information
+        run: |
+          npm --version
+          node --version
+          curl --version
+          git --version
+          svn --version
+  install-develop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup ConcreteCMS
+        run: docker run -d -p 8080:80 mlocati/docker5:develop-full
 
       - name: Wait for Server
         run: |
@@ -84,15 +104,61 @@ jobs:
 #           name: build
 #           if-no-files-found: error
 #           path: build
-
-      - name: "UI Tests - ${{ matrix.browser }} - ${{ matrix.concreteVersion }}"
+  ui-tests-latest:
+    runs-on: ubuntu-latest
+    strategy:      
+      matrix:
+        browser: [firefox, chrome]
+    container: cypress/browsers:node14.15.0-chrome86-ff82
+    needs: install-concrete-latest
+    steps:  
+      - name: "UI Tests - ${{ matrix.browser }} - latest"
         uses: cypress-io/github-action@v2
         with:
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
           record: true
-          group: "UI - ${{ matrix.browser }} : ConcreteCMS - ${{ matrix.concreteVersion }} "
+          group: "UI - ${{ matrix.browser }} : ConcreteCMS - Latest Release "
+          spec: cypress/integration/*
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "UI Tests - Firefox"
+      - if:  matrix.browser == 'firefox'
+        uses: cypress-io/github-action@v2
+        with:
+          wait-on: "http://localhost:8080"
+          wait-on-timeout: 120
+          browser: firefox
+          record: true
+          group: "UI - Firefox"
+          spec: cypress/integration/*
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  ui-tests-develop:
+    runs-on: ubuntu-latest
+    strategy:      
+      matrix:
+        browser: [firefox, chrome]
+    container: cypress/browsers:node14.15.0-chrome86-ff82
+    needs: install-concrete-develop
+    steps:  
+      - name: "UI Tests - ${{ matrix.browser }} - develop"
+        uses: cypress-io/github-action@v2
+        with:
+          wait-on: "http://localhost:8080"
+          wait-on-timeout: 120
+          browser: ${{ matrix.browser }}
+          record: true
+          group: "UI - ${{ matrix.browser }} : ConcreteCMS - Develop Branch"
           spec: cypress/integration/*
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
