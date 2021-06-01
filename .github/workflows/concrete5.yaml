@@ -36,7 +36,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           runTests: false
-          wait-on: 'http://concrete:8080'
+          wait-on: 'http://0.0.0.0:8080'
 
       - name: General debug information
         run: |
@@ -66,7 +66,7 @@ jobs:
 #         uses: cypress-io/github-action@v2
 #         with:
 #           runTests: false
-#           wait-on: 'http://concrete:8080'
+#           wait-on: 'http://0.0.0.0:8080'
 # 
 #       - name: General debug information
 #         run: |
@@ -95,7 +95,7 @@ jobs:
       - name: "UI Tests - Chrome"
         uses: cypress-io/github-action@v2
         with:
-          wait-on: "http://concrete:8080"
+          wait-on: "http://0.0.0.0:8080"
           wait-on-timeout: 120
           browser: chrome
           record: true
@@ -133,7 +133,7 @@ jobs:
 #         with:
 #           config: "viewportWidth=375,viewportHeight=667"
 #           start: yarn start:ci
-#           wait-on: "http://concrete:8080"
+#           wait-on: "http://0.0.0.0:8080"
 #           wait-on-timeout: 120
 #           browser: chrome
 #           record: true
@@ -160,7 +160,7 @@ jobs:
       - name: "UI Tests - Firefox"
         uses: cypress-io/github-action@v2
         with:
-          wait-on: "http://concrete:8080"
+          wait-on: "http://0.0.0.0:8080"
           wait-on-timeout: 120
           browser: firefox
           record: true
@@ -200,7 +200,7 @@ jobs:
 #         with:
 #           config: "viewportWidth=375,viewportHeight=667"
 #           start: yarn start:ci
-#           wait-on: "http://concrete:8080"
+#           wait-on: "http://0.0.0.0:8080"
 #           wait-on-timeout: 120
 #           browser: firefox
 #           record: true
