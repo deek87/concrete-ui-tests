@@ -70,11 +70,6 @@ jobs:
         with:
           runTests: false
 
-      - name: Wait for Server
-        run: |
-          until $(echo | nc localhost 8080); do sleep 1; echo waiting for concreteCMS on port 8080...; done;
-          echo "concreteCMS Server started"
-
       - name: General debug information
         run: |
           npm --version
