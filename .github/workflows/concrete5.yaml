@@ -107,7 +107,7 @@ jobs:
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
       - name: "Run Block Tests - ${{ matrix.browser }}"
-        run: "npm run ci:test -- -b ${{ matrix.browser }} --group: `Block - ${{ matrix.browser }} : ConcreteCMS` --ci-build-id `date +%s` --spec: `cypress/integration/blocks/*`"
+        run: "npm run ci:test -- -b ${{ matrix.browser }} --group `Block - ${{ matrix.browser }} : ConcreteCMS` --ci-build-id `date +%s` --spec: `cypress/integration/blocks/*`"
         env:
           CYPRESS_API_URL: "http://director:1234/"
 
@@ -141,7 +141,7 @@ jobs:
           #group: "Page - ${{ matrix.browser }} : ConcreteCMS"
           spec: cypress/integration/page/*
       - name: "Run Page Tests - ${{ matrix.browser }}"
-        run: "npm run ci:test -- -b ${{ matrix.browser }} --group: `Page - ${{ matrix.browser }} : ConcreteCMS` --ci-build-id `date +%s` --spec: `cypress/integration/page/*`"
+        run: "npm run ci:test -- -b ${{ matrix.browser }} --group `Page - ${{ matrix.browser }} : ConcreteCMS` --ci-build-id `date +%s` --spec: `cypress/integration/page/*`"
         env:
           CYPRESS_API_URL: "http://director:1234/"
         
