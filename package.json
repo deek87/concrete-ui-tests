@@ -36,6 +36,7 @@
   "devDependencies": {
     "cy2": "^1.2.1",
     "cypress": "^7.4.0",
+    "cypress-file-upload": "^5.0.7",
     "typescript": "^4.2.4"
   }
 }

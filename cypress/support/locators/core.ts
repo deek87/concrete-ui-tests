@@ -161,6 +161,7 @@ export class Notification {
 
 export class Dashboard {
     static content: string = 'div[id="ccm-dashboard-content"]'
+    static contentFull: string = 'div[id="ccm-dashboard-content-full"]'
     static page: string = 'div[id="ccm-dashboard-page"]'
     static header: string = Dashboard.content + ' header'
     static bookmark: string = Dashboard.header + ' a[data-bookmark-action]'
@@ -186,5 +187,48 @@ export class Dashboard {
     static toolbarSearch: string = Dashboard.toolbarItem + '.ccm-toolbar-search input[id="ccm-nav-intelligent-search"]'
     static toolbarPanel: string = Dashboard.toolbarItem + ' > a[data-launch-panel="dashboard"]'
     static toolbarAddPage: string = Dashboard.toolbarItem + ' > a[data-launch-panel="sitemap"]'
+
+}
+
+export class FileManager {
+    static headerSearchBase: string = Dashboard.header + ' div.ccm-dashboard-header-search > div.ccm-header-search-form > form'
+    static headerAdvancedSearch: string = FileManager.headerSearchBase + ' a[data-launch-dialog="advanced-search"]'
+    static headerSearchInput: string = FileManager.headerSearchBase + ' input[type=search][id=keywords]'
+    static headerSearchSubmit: string = FileManager.headerSearchBase + ' div.input-group-append > button[type=submit]'
+    static headerMenu: string = Dashboard.header + ' div.ccm-dashboard-header-menu'
+    static headerIcons: string = FileManager.headerMenu + ' ul.ccm-dashboard-header-icons'
+    static maxItemsList: string = FileManager.headerMenu + ' div.form-inline > div.dropdown > button.btn.btn-secondary[type=button][data-toggle=dropdown]'
+    static maxItemsItem: string = FileManager.maxItemsList + ' + ul.dropdown-menu.show > li[data-items-per-page]'
+    static maxItems(maxItems: number): string {
+        return FileManager.maxItemsList + ' + ul.dropdown-menu.show > li[data-items-per-page="' + maxItems.toString() + '"]'
+    }
+    static headerJumpFolder: string = FileManager.headerIcons + ' > li > a[data-launch-dialog="navigate-file-manager"]'
+    static headerNewFolder: string = FileManager.headerIcons + ' > li > a[data-launch-dialog="add-file-manager-folder"]'
+    static headerUploadFile: string = FileManager.headerIcons + ' > li > a[data-launch-dialog="ccm-file-manager-upload"]'
+
+    static jumpContainer: string = Dialog.base + ' div[data-select="file-manager-navigation"]'
+    static treeItem: string = FileManager.jumpContainer + ' li[role=treeitem] > span.fancytree-node'
+    static treeLabel: string = FileManager.treeItem + ' > span.fancytree-title'
+
+    static addFolderPopupBase: string = Dialog.base + ' form[data-dialog-form="add-file-folder-node"]'
+    static addFolderPopupName: string = FileManager.addFolderPopupBase + ' input[type=text][id=fileFolderName]'
+    static addFolderStorage: string = FileManager.addFolderPopupBase + ' select[id=fileFolderFileStorageLocation]'
+
+    static searchResultsContainer: string = Dashboard.contentFull + ' div[id=ccm-search-results-table]'
+    static searchResults: string = FileManager.searchResultsContainer + ' > table[data-search-results="files]'
+    static resultRow: string = FileManager.searchResults + ' tbody> tr[data-details-url]'
+    static resultName: string = FileManager.resultRow + ' > td.ccm-search-results-name'
+    static resultCheckbox: string = FileManager.resultRow + ' > td.ccm-search-results-checkbox'
+    static resultIcon: string = FileManager.resultRow + ' > td.ccm-search-results-icon'
+    static resultFavourite: string = FileManager.resultRow + ' > td.ccm-search-results-favorite-switcher'
+    static resultFavorite: string = FileManager.resultFavourite
+    static resultMenu: string = FileManager.resultRow + ' > td.ccm-search-results-menu-launcher'
+
+    static dropzoneFileInput: string = FileManager.searchResultsContainer + ' input[type=file].ccm-file-uploader-container-dropzone-file-element'
+    static pagination: string = FileManager.searchResultsContainer + ' + div.ccm-search-results-pagination ul.pagination'
+    static paginationItem: string = FileManager.pagination + ' > li.page-item'
+    static paginationPrev: string = FileManager.paginationItem + '.prev'
+    static paginationNext: string = FileManager.paginationItem + '.next'
+    static paginationActive: string = FileManager.paginationItem + '.active'
 
 }

@@ -23,3 +23,7 @@ user add (allow admins to add folders on the home folder icon)
 user add (allow users to click on the name to select a home folder)
 the toolbar in the dashboard is different from the main site...
 faq block in firefox is pre-filled
+file manager hover is a pointer but clicking does nothing, only the name takes to details
+file manager search doesnt reset when clicking x (8.x behaviour)
+file manager multi-select doesnt work shift+select etc
+file manager doesn't refresh on deleting of files

@@ -24,37 +24,37 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-
+import 'cypress-file-upload'
 Cypress.Commands.add('login', (email: string, password: string, page: string = null) => {
-    cy.visit('/index.php/login');
-    cy.get('#uName').type(email);
-    cy.get('#uPassword').type(password);
-    cy.get('div.authentication-type > form button.btn-primary').click();
-    cy.getCookie('CONCRETE5_LOGIN').should('exist');
+    cy.visit('/index.php/login')
+    cy.get('#uName').type(email)
+    cy.get('#uPassword').type(password)
+    cy.get('div.authentication-type > form button.btn-primary').click()
+    cy.getCookie('CONCRETE5_LOGIN').should('exist')
     if (page) {
-        cy.visit(page);
+        cy.visit(page)
     }
     cy.get('body').then(($body) => {
         if ($body.find('button[data-action="agree-privacy-policy"]').length) {
-            $body.find('button[data-action="agree-privacy-policy"]').trigger('click');
+            $body.find('button[data-action="agree-privacy-policy"]').trigger('click')
         }
-        return $body;
+        return $body
     })
 
 })
 
 Cypress.Commands.add('drag', (dragSelector: string, dropSelector: string) => {
     cy.get(dragSelector).should('exist').scrollIntoView()
-        .get(dropSelector).should('exist');
+        .get(dropSelector).should('exist')
 
 
     cy.get(dropSelector).then(
         ($drop) => {
 
-            const coords = $drop[0].getBoundingClientRect();
-            cy.scrollTo(0, coords.y - 200, { duration: 1 }).wait(1000);
-            cy.get(dragSelector).scrollIntoView().trigger('mousedown', { which: 1 }).trigger('mousemove', { duration: 0, pageX: coords.left + coords.width * 0.4, pageY: coords.top + coords.height * 0.4 }).wait(100).trigger('mouseup', { force: true });
-            return cy.get(dragSelector);
+            const coords = $drop[0].getBoundingClientRect()
+            cy.scrollTo(0, coords.y - 200, { duration: 1 }).wait(1000)
+            cy.get(dragSelector).scrollIntoView().trigger('mousedown', { which: 1 }).trigger('mousemove', { duration: 0, pageX: coords.left + coords.width * 0.4, pageY: coords.top + coords.height * 0.4 }).wait(100).trigger('mouseup', { force: true })
+            return cy.get(dragSelector)
         })
-});
+})
 
