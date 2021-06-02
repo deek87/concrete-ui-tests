@@ -85,7 +85,6 @@ jobs:
     strategy:      
       matrix:
         browser: [firefox, chrome]
-        containers: [1, 2, 3]
         concreteVersion: [develop]
       fail-fast: false
     needs: setup-server-develop
@@ -103,8 +102,7 @@ jobs:
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
-          record: true
-          parallel: true
+          record: false
           group: "Block - ${{ matrix.browser }} : ConcreteCMS"
           spec: cypress/integration/blocks/*
         env:
@@ -120,7 +118,6 @@ jobs:
     strategy:      
       matrix:
         browser: [firefox, chrome]
-        containers: [1, 2, 3]
       fail-fast: false
     needs: setup-server-develop
     steps:
@@ -137,8 +134,7 @@ jobs:
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
-          record: true
-          parallel: true
+          record: false
           group: "Page - ${{ matrix.browser }} : ConcreteCMS"
           spec: cypress/integration/page/*
         env:
@@ -152,7 +148,6 @@ jobs:
     strategy:      
       matrix:
         browser: [firefox, chrome]
-        containers: [1, 2, 3]
       fail-fast: false
     needs: setup-server-develop
     steps:
@@ -169,8 +164,7 @@ jobs:
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
-          parallel: true
-          record: true
+          record: false
           group: "Dashboard - ${{ matrix.browser }} : ConcreteCMS"
           spec: cypress/integration/dashboard/*
         env:
@@ -207,7 +201,7 @@ jobs:
 #           wait-on: "http://localhost:8080"
 #           wait-on-timeout: 120
 #           browser: chrome
-#           record: true
+#           record: false
 #           group: "UI - Chrome - Mobile"
 #           spec: cypress/tests/ui/*
 #         env:
@@ -248,7 +242,7 @@ jobs:
 #           wait-on: "http://localhost:8080"
 #           wait-on-timeout: 120
 #           browser: firefox
-#           record: true
+#           record: false
 #           group: "UI - Firefox - Mobile"
 #           spec: cypress/tests/ui/*
 #         env:
@@ -278,7 +272,7 @@ jobs:
 #           start: yarn start:ci
 #           wait-on: "http://localhost:8080"
 #           wait-on-timeout: 120
-#           record: true
+#           record: false
 #           group: "UI - Electron - Windows"
 #           spec: cypress/tests/ui/*
 #         env:
