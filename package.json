@@ -10,7 +10,8 @@
     "cypress:run": "cypress run",
     "cypress:run:firefox": "cypress run -b firefox",
     "cypress:run:edge": "cypress run -b edge",
-    "cypress:run:chrome": "cypress run -b chrome"
+    "cypress:run:chrome": "cypress run -b chrome",
+    "ci:test": "cy2 run --record --key XXX --parallel"
   },
   "keywords": [
     "testing",
