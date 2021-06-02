@@ -81,8 +81,12 @@ jobs:
 
   block-test:
     runs-on: ubuntu-latest
-
-    strategy:      
+    services:
+      director:
+        image: agoldis/sorry-cypress-director
+        ports:
+          - 1234:1234  
+    strategy:
       matrix:
         browser: [firefox, chrome]
         concreteVersion: [develop]
@@ -95,21 +99,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: "Block Tests - ${{ matrix.browser }}"
+      - name: "Setup Block Tests - ${{ matrix.browser }}"
         uses: cypress-io/github-action@v2
         with:
           build: npm install
+          runTests: false
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
-          browser: ${{ matrix.browser }}
-          record: false
-          #group: "Block - ${{ matrix.browser }} : ConcreteCMS"
-          spec: cypress/integration/blocks/*
+      - name: "Run Block Tests - ${{ matrix.browser }}"
+        run: "-record --key XXX --parallel -b ${{ matrix.browser }} --group: `Block - ${{ matrix.browser }} : ConcreteCMS` --ci-build-id `date +%s` --spec: `cypress/integration/blocks/*`"
         env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          # Recommended: pass the GitHub token lets this action correctly
-          # determine the unique run id necessary to re-run the checks
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CYPRESS_API_URL: "http://director:1234/"
 
 
   page-test:
