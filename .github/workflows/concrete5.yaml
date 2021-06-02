@@ -103,7 +103,7 @@ jobs:
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
           record: false
-          group: "Block - ${{ matrix.browser }} : ConcreteCMS"
+          #group: "Block - ${{ matrix.browser }} : ConcreteCMS"
           spec: cypress/integration/blocks/*
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -135,7 +135,7 @@ jobs:
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
           record: false
-          group: "Page - ${{ matrix.browser }} : ConcreteCMS"
+          #group: "Page - ${{ matrix.browser }} : ConcreteCMS"
           spec: cypress/integration/page/*
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -165,7 +165,7 @@ jobs:
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
           record: false
-          group: "Dashboard - ${{ matrix.browser }} : ConcreteCMS"
+          #group: "Dashboard - ${{ matrix.browser }} : ConcreteCMS"
           spec: cypress/integration/dashboard/*
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
