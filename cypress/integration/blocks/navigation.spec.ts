@@ -118,7 +118,7 @@ describe('Testing the navigation blocks', () => {
             cy.get(Area.zone('Main') + ' div.ccm-block-rss-displayer-wrapper > div.ccm-block-rss-displayer').as('rss-wrapper').should('be.visible')
             cy.get('@rss-wrapper').find('div.ccm-block-rss-displayer-header h2').should('be.visible').contains('Test Feed')
             cy.get('@rss-wrapper').find('div.ccm-block-rss-displayer-item').should('have.length', '4')
-            cy.get('@rss-wrapper').find('div.ccm-block-rss-displayer-item-date').first().contains('2004/10/20')
+            cy.get('@rss-wrapper').find('div.ccm-block-rss-displayer-item-date').first().contains('2004/10/') // because japan / america timezones...
         })
         it('deletes the block', () => {
             cy.get(Area.zone('Main') + '  div[data-block-type-handle="rss_displayer"]').click()

@@ -6,7 +6,11 @@
   "scripts": {
     "test": "test",
     "cypress:open": "cypress open",
-    "cypress:record": "cypress run --record"
+    "cypress:record": "cypress run --record",
+    "cypress:run": "cypress run",
+    "cypress:run:firefox": "cypress run -b firefox",
+    "cypress:run:edge": "cypress run -b edge",
+    "cypress:run:chrome": "cypress run -b chrome"
   },
   "keywords": [
     "testing",

@@ -22,3 +22,4 @@ private message styling needs to be consistant - maybe consolidated that all int
 user add (allow admins to add folders on the home folder icon)
 user add (allow users to click on the name to select a home folder)
 the toolbar in the dashboard is different from the main site...
+faq block in firefox is pre-filled

@@ -510,7 +510,10 @@ describe('Testing the basic blocks', () => {
             cy.get(Block.popupDesign).click()
             cy.wait('@blockDesign')
             cy.get(Block.designBase).should('be.visible')
-            cy.get(Block.designTemplateList).click('bottom')
+            cy.wait(50)
+            cy.get(Block.designBase + ' li.ccm-inline-toolbar-select div.dropdown-menu').should('not.be.visible')
+            cy.get(Block.designTemplateList).click()
+
             cy.get(Block.designTemplateItem).contains('Hover Description').click()
             cy.intercept('*/ccm/system/block/render*').as('blockLoad')
 

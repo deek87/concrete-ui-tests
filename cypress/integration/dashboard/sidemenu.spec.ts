@@ -47,9 +47,11 @@ describe('Testing the bookmark and favourites', () => {
         cy.get(Dashboard.activeMenuItem).should('have.length', '6')
     })
     it('reloads the dashboard panel', () => {
+        cy.intercept('*ccm/system/panels/dashboard*').as('dashboard');
         cy.get(Dashboard.toolbarPanel).scrollIntoView().click()
-        cy.wait(50);
         cy.get(Dashboard.toolbarPanel).scrollIntoView().click()
+        cy.wait('@dashboard');
+        cy.wait(100); // This stops random failures with detached elements
         cy.get(Dashboard.panelContent + ' a.ccm-panel-back').click()
         cy.get(Dashboard.favouritePanelSelect).click()
         cy.get(Dashboard.activeMenuItem).should('have.length', '7')
@@ -64,9 +66,11 @@ describe('Testing the bookmark and favourites', () => {
         cy.get(Dashboard.activeMenuItem).should('have.length', '7')
     })
     it('reloads the dashboard panel', () => {
+        cy.intercept('*ccm/system/panels/dashboard*').as('dashboard');
         cy.get(Dashboard.toolbarPanel).scrollIntoView().click()
-        cy.wait(50);
         cy.get(Dashboard.toolbarPanel).scrollIntoView().click()
+        cy.wait('@dashboard');
+        cy.wait(100); // This stops random failures with detached elements
         cy.get(Dashboard.panelContent + ' a.ccm-panel-back').click()
         cy.get(Dashboard.favouritePanelSelect).scrollIntoView().click()
         cy.get(Dashboard.activeMenuItem).should('have.length', '6')
