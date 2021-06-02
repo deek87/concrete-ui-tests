@@ -169,7 +169,7 @@ jobs:
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
-          parralel: true
+          parallel: true
           record: true
           group: "Dashboard - ${{ matrix.browser }} : ConcreteCMS"
           spec: cypress/integration/dashboard/*
