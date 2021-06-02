@@ -27,10 +27,10 @@ describe('Testing the basic blocks', () => {
 
     describe('creates a new test page', () => {
         it('opens the sitemap', () => {
-            cy.get(Toolbar.addPage).click()
+            cy.get(Toolbar.addPage).scrollIntoView().click()
         })
         it('clicks the empty page type', () => {
-            cy.get(SitemapPanel.createPageLink).contains('Empty Page').click()
+            cy.get(SitemapPanel.createPageLink).contains('Empty Page').scrollIntoView().click()
         })
     })
 

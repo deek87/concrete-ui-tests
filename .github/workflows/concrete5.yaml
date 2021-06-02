@@ -129,6 +129,7 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: "Page Tests - ${{ matrix.browser }}"
         uses: cypress-io/github-action@v2
         with:
@@ -137,6 +138,7 @@ jobs:
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
           record: true
+          parallel: true
           group: "Page - ${{ matrix.browser }} : ConcreteCMS"
           spec: cypress/integration/page/*
         env:
@@ -167,6 +169,7 @@ jobs:
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
+          parralel: true
           record: true
           group: "Dashboard - ${{ matrix.browser }} : ConcreteCMS"
           spec: cypress/integration/dashboard/*
