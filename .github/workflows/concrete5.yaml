@@ -107,7 +107,7 @@ jobs:
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
       - name: "Run Block Tests - ${{ matrix.browser }}"
-        run: "-record --key XXX --parallel -b ${{ matrix.browser }} --group: `Block - ${{ matrix.browser }} : ConcreteCMS` --ci-build-id `date +%s` --spec: `cypress/integration/blocks/*`"
+        run: "cy2 run --record --key XXX --parallel -b ${{ matrix.browser }} --group: `Block - ${{ matrix.browser }} : ConcreteCMS` --ci-build-id `date +%s` --spec: `cypress/integration/blocks/*`"
         env:
           CYPRESS_API_URL: "http://director:1234/"
 
