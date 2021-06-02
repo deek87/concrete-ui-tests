@@ -60,6 +60,14 @@ jobs:
     steps:
       - name: Setup ConcreteCMS
         run: "docker run -d -p 8080:80 mlocati/docker5:${{ matrix.concreteVersion }}-full"
+        
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: "Setup Node"
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
       - name: Wait for Server
         run: |
@@ -73,8 +81,7 @@ jobs:
           curl --version
           git --version
           svn --version
-      - name: Checkout
-        uses: actions/checkout@v2
+      
 
       - name: "UI Tests - ${{ matrix.browser }} - ${{ matrix.concreteVersion }}"
         uses: cypress-io/github-action@v2
