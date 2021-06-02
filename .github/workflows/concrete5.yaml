@@ -92,11 +92,10 @@ jobs:
         containers: [1, 2, 3]
         concreteVersion: [develop]
       fail-fast: false
-        
-    needs: ["setup-server-${{ matrix.concreteVersion }}"]
+    needs: setup-server-develop
     steps:
       - name: Setup ConcreteCMS Server
-        run: "docker run -d -p 8080:80 mlocati/docker5:${{ matrix.concreteVersion }}-full"
+        run: "docker run -d -p 8080:80 mlocati/docker5:develop-full"
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -127,8 +126,11 @@ jobs:
         browser: [firefox, chrome]
         containers: [1, 2, 3]
       fail-fast: false
-    needs: setup-server
+    needs: setup-server-develop
     steps:
+      - name: Setup ConcreteCMS Server
+        run: "docker run -d -p 8080:80 mlocati/docker5:develop-full"
+
       - name: Checkout
         uses: actions/checkout@v2
       - name: "Page Tests - ${{ matrix.browser }}"
@@ -154,8 +156,11 @@ jobs:
         browser: [firefox, chrome]
         containers: [1, 2, 3]
       fail-fast: false
-    needs: setup-server
+    needs: setup-server-develop
     steps:
+      - name: Setup ConcreteCMS Server
+        run: "docker run -d -p 8080:80 mlocati/docker5:develop-full"
+        
       - name: Checkout
         uses: actions/checkout@v2
 
