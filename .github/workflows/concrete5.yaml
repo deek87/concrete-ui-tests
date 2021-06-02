@@ -60,7 +60,7 @@ jobs:
     steps:
       - name: Setup ConcreteCMS
         run: "docker run -d -p 8080:80 mlocati/docker5:${{ matrix.concreteVersion }}-full"
-        
+
       - name: Checkout
         uses: actions/checkout@v2
       
@@ -92,7 +92,7 @@ jobs:
           browser: ${{ matrix.browser }}
           record: true
           group: "UI - ${{ matrix.browser }} : ConcreteCMS - ${{ matrix.concreteVersion }}"
-          spec: cypress/integration/*
+          spec: cypress/integration/**/*
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # Recommended: pass the GitHub token lets this action correctly
