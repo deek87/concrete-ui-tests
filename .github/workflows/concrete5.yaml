@@ -15,62 +15,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  install-latest:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup ConcreteCMS
-        run: docker run -d -p 8080:80 mlocati/docker5:latest-full
-
-      - name: Wait for Server
-        run: |
-          until $(echo | nc localhost 8080); do sleep 1; echo waiting for concreteCMS on port 8080...; done;
-          echo "concreteCMS Server started"
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Cypress install
-        uses: cypress-io/github-action@v2
-        with:
-          runTests: false
-          wait-on: 'http://localhost:8080'
-
-      - name: General debug information
-        run: |
-          npm --version
-          node --version
-          curl --version
-          git --version
-          svn --version
-
-  install-develop:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup ConcreteCMS
-        run: docker run -d -p 8080:80 mlocati/docker5:develop-full
-
-      - name: Wait for Server
-        run: |
-          until $(echo | nc localhost 8080); do sleep 1; echo waiting for concreteCMS on port 8080...; done;
-          echo "concreteCMS Server started"
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: General debug information
-        run: |
-          npm --version
-          node --version
-          curl --version
-          git --version
-          svn --version
-
-      - name: Cypress install
-        uses: cypress-io/github-action@v2
-        with:
-          build: npm install
-          runTests: false
-          wait-on: 'http://localhost:8080'
-      
-
 #   install-windows:
 #     runs-on: windows-2019
 #     services:
@@ -112,15 +56,27 @@ jobs:
     strategy:      
       matrix:
         browser: [firefox, chrome]
-    container: cypress/browsers:node14.15.0-chrome86-ff82
-    services:
-      concrete: 
-          image: mlocati/docker5:latest-full
-    needs: install-latest
-    steps:  
+        concreteVersion: [latest, develop]
+    steps:
+      - name: Setup ConcreteCMS
+        run: "docker run -d -p 8080:80 mlocati/docker5:${{ matrix.concreteVersion }}-full"
+
+      - name: Wait for Server
+        run: |
+          until $(echo | nc localhost 8080); do sleep 1; echo waiting for concreteCMS on port 8080...; done;
+          echo "concreteCMS Server started"
+
+      - name: General debug information
+        run: |
+          npm --version
+          node --version
+          curl --version
+          git --version
+          svn --version
       - name: Checkout
         uses: actions/checkout@v2
-      - name: "UI Tests - ${{ matrix.browser }} - latest"
+
+      - name: "UI Tests - ${{ matrix.browser }} - ${{ matrix.concreteVersion }}"
         uses: cypress-io/github-action@v2
         with:
           build: npm install
@@ -128,40 +84,13 @@ jobs:
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
           record: true
-          group: "UI - ${{ matrix.browser }} : ConcreteCMS - Latest Release "
+          group: "UI - ${{ matrix.browser }} : ConcreteCMS - ${{ matrix.concreteVersion }}"
           spec: cypress/integration/*
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  ui-tests-develop:
-    runs-on: ubuntu-latest
-    strategy:      
-      matrix:
-        browser: [firefox, chrome]
-    container: cypress/browsers:node14.15.0-chrome86-ff82
-    needs: install-develop
-    steps:  
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: "UI Tests - ${{ matrix.browser }} - develop"
-        uses: cypress-io/github-action@v2
-        with:
-          build: npm install
-          wait-on: "http://localhost:8080"
-          wait-on-timeout: 120
-          browser: ${{ matrix.browser }}
-          record: true
-          group: "UI - ${{ matrix.browser }} : ConcreteCMS - Develop Branch"
-          spec: cypress/integration/*
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          # Recommended: pass the GitHub token lets this action correctly
-          # determine the unique run id necessary to re-run the checks
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 #   ui-chrome-mobile-tests:
 #     timeout-minutes: 15
 #     runs-on: ubuntu-latest
