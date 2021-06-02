@@ -215,13 +215,13 @@ describe('Testing the basic blocks', () => {
         })
         it('it adds an image from table view', () => {
             cy.fileManager('open')
-            cy.get(FileSelect.menuItem).contains('File Manager').click()
-            cy.get(FileSelect.sort).click()
+            cy.get(FileSelect.menuItem).contains('File Manager').scrollIntoView().click()
+            cy.get(FileSelect.sort).scrollIntoView().click()
             cy.fileManager('select', 'subway')
         })
         it('it adds a hover image from recent uploads', () => {
             cy.fileManager('open', 'fOnstateID')
-            cy.get(FileSelect.menuItem).contains('File Manager').click()
+            cy.get(FileSelect.menuItem).contains('File Manager').scrollIntoView().click()
             cy.fileManager('select', 'houses')
         })
         it('it adds an external link', () => {

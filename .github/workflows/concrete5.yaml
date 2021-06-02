@@ -51,16 +51,15 @@ jobs:
 #           name: build
 #           if-no-files-found: error
 #           path: build
-  ui-tests-latest:
+  setup-server:
     runs-on: ubuntu-latest
-    strategy:      
+    strategy:
       matrix:
-        browser: [firefox, chrome]
-        concreteVersion: [latest, develop]
+        concreteVersion: [develop]
     steps:
+    
       - name: Setup ConcreteCMS
         run: "docker run -d -p 8080:80 mlocati/docker5:${{ matrix.concreteVersion }}-full"
-
       - name: Checkout
         uses: actions/checkout@v2
       
@@ -83,7 +82,15 @@ jobs:
           svn --version
       
 
-      - name: "UI Tests - ${{ matrix.browser }} - ${{ matrix.concreteVersion }}"
+  block-test:
+    runs-on: ubuntu-latest
+
+    strategy:      
+      matrix:
+        browser: [firefox, chrome]
+    needs: setup-server
+    steps:
+      - name: "Block Tests - ${{ matrix.browser }}"
         uses: cypress-io/github-action@v2
         with:
           build: npm install
@@ -91,8 +98,56 @@ jobs:
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
           record: true
-          group: "UI - ${{ matrix.browser }} : ConcreteCMS - ${{ matrix.concreteVersion }}"
-          spec: cypress/integration/**/*
+          group: "Block - ${{ matrix.browser }} : ConcreteCMS"
+          spec: cypress/integration/blocks/*
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+  page-test:
+    runs-on: ubuntu-latest
+
+    strategy:      
+      matrix:
+        browser: [firefox, chrome]
+    needs: setup-server
+    steps:
+      - name: "Page Tests - ${{ matrix.browser }}"
+        uses: cypress-io/github-action@v2
+        with:
+          build: npm install
+          wait-on: "http://localhost:8080"
+          wait-on-timeout: 120
+          browser: ${{ matrix.browser }}
+          record: true
+          group: "Page - ${{ matrix.browser }} : ConcreteCMS"
+          spec: cypress/integration/page/*
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  dashboard-test:
+    runs-on: ubuntu-latest
+
+    strategy:      
+      matrix:
+        browser: [firefox, chrome]
+    needs: setup-server
+    steps:
+      - name: "Dashboard Tests - ${{ matrix.browser }}"
+        uses: cypress-io/github-action@v2
+        with:
+          build: npm install
+          wait-on: "http://localhost:8080"
+          wait-on-timeout: 120
+          browser: ${{ matrix.browser }}
+          record: true
+          group: "Dashboard - ${{ matrix.browser }} : ConcreteCMS"
+          spec: cypress/integration/dashboard/*
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # Recommended: pass the GitHub token lets this action correctly
