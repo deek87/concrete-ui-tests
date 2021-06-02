@@ -57,10 +57,6 @@ jobs:
       - name: Setup ConcreteCMS
         run: "docker pull mlocati/docker5:develop-full"
         
-      - name: Install Cypress
-        uses: cypress-io/github-action@v2
-        with:
-          runTests: false
       - name: Checkout
         uses: actions/checkout@v2
       
@@ -68,6 +64,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
+
+      - name: Install Cypress
+        uses: cypress-io/github-action@v2
+        with:
+          runTests: false
 
       - name: Wait for Server
         run: |
@@ -160,7 +161,7 @@ jobs:
     steps:
       - name: Setup ConcreteCMS Server
         run: "docker run -d -p 8080:80 mlocati/docker5:develop-full"
-        
+
       - name: Checkout
         uses: actions/checkout@v2
 
