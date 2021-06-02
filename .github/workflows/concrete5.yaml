@@ -51,15 +51,16 @@ jobs:
 #           name: build
 #           if-no-files-found: error
 #           path: build
-  setup-server:
+  setup-server-develop:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        concreteVersion: [develop]
     steps:
-    
       - name: Setup ConcreteCMS
-        run: "docker run -d -p 8080:80 mlocati/docker5:${{ matrix.concreteVersion }}-full"
+        run: "docker pull mlocati/docker5:develop-full"
+        
+      - name: Install Cypress
+        uses: cypress-io/github-action@v2
+        with:
+          runTests: false
       - name: Checkout
         uses: actions/checkout@v2
       
@@ -88,8 +89,18 @@ jobs:
     strategy:      
       matrix:
         browser: [firefox, chrome]
-    needs: setup-server
+        containers: [1, 2, 3]
+        concreteVersion: [develop]
+      fail-fast: false
+        
+    needs: ["setup-server-${{ matrix.concreteVersion }}"]
     steps:
+      - name: Setup ConcreteCMS Server
+        run: "docker run -d -p 8080:80 mlocati/docker5:${{ matrix.concreteVersion }}-full"
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: "Block Tests - ${{ matrix.browser }}"
         uses: cypress-io/github-action@v2
         with:
@@ -98,6 +109,7 @@ jobs:
           wait-on-timeout: 120
           browser: ${{ matrix.browser }}
           record: true
+          parallel: true
           group: "Block - ${{ matrix.browser }} : ConcreteCMS"
           spec: cypress/integration/blocks/*
         env:
@@ -109,12 +121,16 @@ jobs:
 
   page-test:
     runs-on: ubuntu-latest
-
+    
     strategy:      
       matrix:
         browser: [firefox, chrome]
+        containers: [1, 2, 3]
+      fail-fast: false
     needs: setup-server
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: "Page Tests - ${{ matrix.browser }}"
         uses: cypress-io/github-action@v2
         with:
@@ -136,8 +152,13 @@ jobs:
     strategy:      
       matrix:
         browser: [firefox, chrome]
+        containers: [1, 2, 3]
+      fail-fast: false
     needs: setup-server
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: "Dashboard Tests - ${{ matrix.browser }}"
         uses: cypress-io/github-action@v2
         with:
