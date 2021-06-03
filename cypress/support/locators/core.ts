@@ -1,9 +1,9 @@
 export class Dialog {
     static base: string = 'div.ui-dialog[role="dialog"]:last'
     static buttonWrapper: string = Dialog.base + ' div.ui-dialog-buttonpane'
-    static primaryButton: string = Dialog.buttonWrapper + ' > .btn-primary:visible'
-    static secondaryButton: string = Dialog.buttonWrapper + ' > .btn-secondary:visible'
-    static dangerButton: string = Dialog.buttonWrapper + ' > .btn-danger:visible'
+    static primaryButton: string = Dialog.buttonWrapper + ' .btn-primary:visible'
+    static secondaryButton: string = Dialog.buttonWrapper + ' .btn-secondary:visible'
+    static dangerButton: string = Dialog.buttonWrapper + ' .btn-danger:visible'
     static cancelButton: string = Dialog.buttonWrapper + '[data-dialog-action="cancel"]:visible'
 }
 
@@ -215,7 +215,7 @@ export class FileManager {
     static addFolderStorage: string = FileManager.addFolderPopupBase + ' select[id=fileFolderFileStorageLocation]'
 
     static searchResultsContainer: string = Dashboard.contentFull + ' div[id=ccm-search-results-table]'
-    static searchResults: string = FileManager.searchResultsContainer + ' > table[data-search-results="files]'
+    static searchResults: string = FileManager.searchResultsContainer + ' > table[data-search-results=files]'
     static resultRow: string = FileManager.searchResults + ' tbody> tr[data-details-url]'
     static resultName: string = FileManager.resultRow + ' > td.ccm-search-results-name'
     static resultCheckbox: string = FileManager.resultRow + ' > td.ccm-search-results-checkbox'
@@ -224,11 +224,44 @@ export class FileManager {
     static resultFavorite: string = FileManager.resultFavourite
     static resultMenu: string = FileManager.resultRow + ' > td.ccm-search-results-menu-launcher'
 
+    static activeResultMenu: string = FileManager.resultMenu + ' div.dropdown-menu.show:visible'
+    static activeResultMenuItem: string = FileManager.activeResultMenu + ' a.dropdown-item'
+    static activeResultView: string = FileManager.activeResultMenuItem + '[href*=/ccm/system/file/view]'
+    static activeResultEdit: string = FileManager.activeResultMenuItem + '[href*=/ccm/system/file/edit]'
+    static activeResultDetails: string = FileManager.activeResultMenuItem + '[href*=/dashboard/files/details]'
+    static activeResultMoveFolder: string = FileManager.activeResultMenuItem + '[href*=/ccm/system/dialogs/file/folder]'
+    static activeResultDuplicate: string = FileManager.activeResultMenuItem + '[data-file-manager-action="duplicate"]'
+    static activeResultDelete: string = FileManager.activeResultMenuItem + '[data-tree-action="delete-file"]'
+    static activeResultDeleteFolder: string = FileManager.activeResultMenuItem + '[data-tree-action="delete-node"]'
+    static activeResultEditFolder: string = FileManager.activeResultMenuItem + '[data-tree-action="edit-node"]'
+
+
     static dropzoneFileInput: string = FileManager.searchResultsContainer + ' input[type=file].ccm-file-uploader-container-dropzone-file-element'
     static pagination: string = FileManager.searchResultsContainer + ' + div.ccm-search-results-pagination ul.pagination'
     static paginationItem: string = FileManager.pagination + ' > li.page-item'
     static paginationPrev: string = FileManager.paginationItem + '.prev'
     static paginationNext: string = FileManager.paginationItem + '.next'
     static paginationActive: string = FileManager.paginationItem + '.active'
+
+    static importDialogTabList: string = Dialog.base + ' ul[id=ccm-file-import-tab-menu]'
+    static importDialogTabItem: string = FileManager.importDialogTabList + ' > li.nav-item > a[data-toggle=tab]'
+    static importDialogActiveTab: string = FileManager.importDialogTabItem + '.active'
+    static importDialogYourComputer: string = FileManager.importDialogTabItem + '[href="#your-computer"]'
+    static importDialogIncoming: string = FileManager.importDialogTabItem + '[href="#incoming-directory"]'
+    static importDialogRemote: string = FileManager.importDialogTabItem + '[href="#remote-files"]'
+    static importDialogFileContainer: string = Dialog.base + ' div[id=your-computer] div.ccm-file-upload-container-wrapper'
+    static importDialogFileWrapper: string = FileManager.importDialogFileContainer + ' div.ccm-file-upload-wrapper'
+    static importDialogFileItemWrapper: string = FileManager.importDialogFileWrapper + ' div.ccm-file-upload-item-wrapper'
+    static importDialogFolderContainer: string = Dialog.base + ' div.ccm-directory-selector-container'
+    static importDialogFolderSelector: string = FileManager.importDialogFolderContainer + ' div.dropdown.bootstrap.ccm-directory-selector'
+    static importDialogFolderSelectorSelected: string = FileManager.importDialogFolderSelector + ' button div.filter-option-inner-inner'
+    static importDialogFolderSelectorSearch: string = FileManager.importDialogFolderSelector + ' div.bs-searchbox > input[type=search]'
+    static importDialogFolderSelectorList: string = FileManager.importDialogFolderSelector + ' div.inner.show[role=listbox] ul.dropdown-menu'
+    static importDialogFolderSelectorItem: string = FileManager.importDialogFolderSelectorList + ' li > a[role=option]'
+    static importDialogNewFolderButton: string = FileManager.importDialogFolderContainer + ' div.input-group-prepend > a.ccm-file-uploader-create-new-directory-button'
+    static importDialogNewFolderName: string = Dialog.base + ' div.ccm-file-uploader-new-directory-name-container input[type=text].ccm-file-uploader-new-directory-name'
+    static importDialogRemoteFilesTextbox: string = Dialog.base + 'div[id=remote-files] > div.ccm-remote-files-container > textarea.ccm-remote-file-url'
+
+
 
 }

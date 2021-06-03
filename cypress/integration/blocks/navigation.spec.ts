@@ -46,7 +46,10 @@ describe('Testing the navigation blocks', () => {
 
         })
         it('adds the first entry', () => {
-
+            if (!Cypress.isBrowser('firefox')) {
+                // fix for the fact chromium based browsers dont show the first entry
+                cy.get(Block.dialog + ' div.ccm-faq-block-container > button.btn-success.ccm-add-faq-entry').click()
+            }
             cy.get(Block.dialog + ' ' + Form.text('linkTitle\\[\\]') + ':last').scrollIntoView().type('FAQ Link Title 1')
             cy.get(Block.dialog + ' ' + Form.text('title\\[\\]') + ':last').scrollIntoView().type('FAQ Title 1')
             cy.get(Block.dialog + ' ' + Form.richTextArea('description\\[\\]') + ':last').scrollIntoView().click('bottom').type('FAQ Description 1{shift}{enter}Extra Details...{shift}{enter}..go here...')

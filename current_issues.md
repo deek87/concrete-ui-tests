@@ -27,3 +27,6 @@ file manager hover is a pointer but clicking does nothing, only the name takes t
 file manager search doesnt reset when clicking x (8.x behaviour)
 file manager multi-select doesnt work shift+select etc
 file manager doesn't refresh on deleting of files
+file manager import dialog - remote files contains a textarea and a hidden text field? why?
+file manager import dialog - create new folder doesnt create a new folder just hides/shows a textbox to enter a name - its position is decideed by the upload files box ? why
+file manager upload doesnt have a notification
