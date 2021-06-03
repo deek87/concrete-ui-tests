@@ -168,7 +168,11 @@ jobs:
         
   dashboard-test:
     runs-on: ubuntu-latest
-
+    services:
+      director:
+        image: agoldis/sorry-cypress-director
+        ports:
+          - 1234:1234  
     strategy:      
       matrix:
         browser: [firefox, chrome]
