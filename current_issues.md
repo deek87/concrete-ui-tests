@@ -23,10 +23,11 @@ user add (allow admins to add folders on the home folder icon)
 user add (allow users to click on the name to select a home folder)
 the toolbar in the dashboard is different from the main site...
 faq block in firefox is pre-filled
-file manager hover is a pointer but clicking does nothing, only the name takes to details
-file manager search doesnt reset when clicking x (8.x behaviour)
-file manager multi-select doesnt work shift+select etc
-file manager doesn't refresh on deleting of files
-file manager import dialog - remote files contains a textarea and a hidden text field? why?
-file manager import dialog - create new folder doesnt create a new folder just hides/shows a textbox to enter a name - its position is decideed by the upload files box ? why
-file manager upload doesnt have a notification
+file manager hover is a pointer but clicking does nothing, only the name takes to details concrete5/concrete5#9508
+file manager search doesnt reset when clicking x (8.x behaviour) concrete5/concrete5#9508
+file manager multi-select doesnt work shift+select etc concrete5/concrete5#9508
+file manager doesn't refresh on deleting of files or folders (so users are unsure if it was really deleted) concrete5/concrete5#9508
+file manager import dialog - remote files contains a textarea and a hidden text field? why? concrete5/concrete5#9508
+file manager import dialog - create new folder doesnt create a new folder just hides/shows a textbox to enter a name - its position is decideed by the upload files box ? why concrete5/concrete5#9508
+file manager upload doesnt have a notification concrete5/concrete5#9508
+file manager upload has changed behaviour, however this leads to unable to upload a valid file next to an invalid file (v8 behaviour is to upload only the valid file and throw error) concrete5/concrete5#9508

@@ -27,11 +27,15 @@ describe('Testing the bookmark and favourites', () => {
     })
     it('selects the file manager', () => {
         cy.get(Dashboard.activeMenuItem + '[href*="/dashboard/files"]').click()
-
     })
     describe('uploading file via drag and drop', () => {
         it('drags and drops a valid file', () => {
-            cy.get(FileManager.searchResultsContainer).attachFile('sample_curry.jpeg', { subjectType: 'drag-n-drop' })
+            if (Cypress.isBrowser('firefox')) {
+                cy.get(FileManager.searchResultsContainer).attachFile('sample_curry.jpeg', { subjectType: 'drag-n-drop' })
+            } else {
+                cy.get(FileManager.dropzoneFileInput).attachFile('sample_curry.jpeg', { subjectType: 'input' })
+            }
+
         })
         it('checks the file is shown in the dialog', () => {
             cy.get(FileManager.importDialogActiveTab).should('be.visible')
@@ -71,6 +75,7 @@ describe('Testing the bookmark and favourites', () => {
             cy.intercept('*/ccm/system/tree/node/load_starting').as('loadNodes')
             cy.get(FileManager.headerJumpFolder).scrollIntoView().click()
             cy.wait('@loadNodes')
+            cy.wait(50)
             cy.get(FileManager.treeItem).contains('File Manager').click()
             cy.get(FileManager.headerSearchInput).scrollIntoView().type('Test Folder - 1')
             cy.get(FileManager.headerSearchSubmit).click()
