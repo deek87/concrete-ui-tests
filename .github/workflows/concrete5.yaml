@@ -110,6 +110,17 @@ jobs:
         run: "npm run ci:test -- -b ${{ matrix.browser }} --group 'Block - ${{ matrix.browser }} : ConcreteCMS' --ci-build-id `date +%s` --spec 'cypress/integration/blocks/*'"
         env:
           CYPRESS_API_URL: "http://localhost:1234/"
+          CI: true
+      - name: save screenshots
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: block-test-failure-${{ matrix.browser }}
+          path: |
+            cypress/screenshots
+            cypress/videos
+          retention-days: 2
+
 
 
   page-test:
@@ -144,6 +155,16 @@ jobs:
         run: "npm run ci:test --  --spec 'cypress/integration/page/*' -b ${{ matrix.browser }} --group 'Page - ${{ matrix.browser }} : ConcreteCMS' --ci-build-id `date +%s`"
         env:
           CYPRESS_API_URL: "http://127.0.0.1:1234/"
+          CI: true
+      - name: save screenshots
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: page-test-failure-${{ matrix.browser }}
+          path: |
+            cypress/screenshots
+            cypress/videos
+          retention-days: 2
         
   dashboard-test:
     runs-on: ubuntu-latest
@@ -164,17 +185,27 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           build: npm install
+          runTests: false
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
-          browser: ${{ matrix.browser }}
-          record: false
-          #group: "Dashboard - ${{ matrix.browser }} : ConcreteCMS"
-          spec: cypress/integration/dashboard/*
+
+      - name: "Run Dashboard Tests - ${{ matrix.browser }}"
+        run: "npm run ci:test --  --spec 'cypress/integration/dashboard/*' -b ${{ matrix.browser }} --group 'Dashboard - ${{ matrix.browser }} : ConcreteCMS' --ci-build-id `date +%s`"
         env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          # Recommended: pass the GitHub token lets this action correctly
-          # determine the unique run id necessary to re-run the checks
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CYPRESS_API_URL: "http://127.0.0.1:1234/"
+          CI: true
+      - name: save screenshots
+      - name: save screenshots
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: block-test-failure-${{ matrix.browser }}
+          path: |
+            cypress/screenshots
+            cypress/videos
+          retention-days: 2
+
+
 #   ui-chrome-mobile-tests:
 #     timeout-minutes: 15
 #     runs-on: ubuntu-latest
