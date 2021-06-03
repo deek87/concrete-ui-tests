@@ -109,7 +109,7 @@ jobs:
       - name: "Run Block Tests - ${{ matrix.browser }}"
         run: "npm run ci:test -- -b ${{ matrix.browser }} --group 'Block - ${{ matrix.browser }} : ConcreteCMS' --ci-build-id `date +%s` --spec 'cypress/integration/blocks/*'"
         env:
-          CYPRESS_API_URL: "http://director:1234/"
+          CYPRESS_API_URL: "http://localhost:1234/"
 
 
   page-test:
@@ -143,7 +143,7 @@ jobs:
       - name: "Run Page Tests - ${{ matrix.browser }}"
         run: "npm run ci:test --  --spec 'cypress/integration/page/*' -b ${{ matrix.browser }} --group 'Page - ${{ matrix.browser }} : ConcreteCMS' --ci-build-id `date +%s`"
         env:
-          CYPRESS_API_URL: "http://director:1234/"
+          CYPRESS_API_URL: "http://127.0.0.1:1234/"
         
   dashboard-test:
     runs-on: ubuntu-latest
