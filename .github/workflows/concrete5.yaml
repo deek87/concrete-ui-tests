@@ -111,7 +111,7 @@ jobs:
         env:
           CYPRESS_API_URL: "http://localhost:1234/"
           CI: true
-      - name: save screenshots
+      - name: Save Screenshots and Videos
         uses: actions/upload-artifact@v2
         if: failure()
         with:
@@ -156,7 +156,7 @@ jobs:
         env:
           CYPRESS_API_URL: "http://127.0.0.1:1234/"
           CI: true
-      - name: save screenshots
+      - name: Save Screenshots and Videos
         uses: actions/upload-artifact@v2
         if: failure()
         with:
@@ -194,12 +194,12 @@ jobs:
         env:
           CYPRESS_API_URL: "http://127.0.0.1:1234/"
           CI: true
-      - name: save screenshots
-      - name: save screenshots
+
+      - name: Save Screenshots and Videos
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: block-test-failure-${{ matrix.browser }}
+          name: dashboard-test-failure-${{ matrix.browser }}
           path: |
             cypress/screenshots
             cypress/videos
