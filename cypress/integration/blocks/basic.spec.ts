@@ -327,6 +327,7 @@ describe('Testing the basic blocks', () => {
             cy.intercept('*/ccm/system/page/sitemap_data*').as('loadSitemapData')
             cy.sitemap('open', 'imageLink_page');
             cy.wait('@loadSitemapData')
+            cy.wait(50)
             cy.sitemap('select', 'Home')
             cy.get(Block.dialog + ' ' + Form.checkbox('cropImage')).click('bottom')
             cy.get(Block.dialog + ' ' + Form.number('maxWidth')).scrollIntoView().click('bottom').clear().type('200')

@@ -1,6 +1,6 @@
 import { Composer } from "../../support/locators/composer"
-import { ckEditor, SitemapPanel, Toolbar } from "../../support/locators/edit"
-import { Notification } from "../../support/locators/core"
+import { CheckInPanel, ckEditor, PageSettings, SitemapPanel, Toolbar } from "../../support/locators/edit"
+import { Dialog, Notification } from "../../support/locators/core"
 
 describe('Adding a page via composer', () => {
     before(() => {
@@ -31,7 +31,9 @@ describe('Adding a page via composer', () => {
             cy.wait(100) // wait for the nodes to populate
         })
         it('clicks the blog type', () => {
-            cy.get(SitemapPanel.createPageLink).contains('Blog Entry').click()
+            cy.get(SitemapPanel.createPageLink).should('have.length.at.least', 1)
+            cy.get(SitemapPanel.createPageLink).contains('Blog Entry').scrollIntoView().click({ force: true }) // sometimes the tooltip hides part of this -_-
+
         })
     })
     describe('Enters the details of the blog entry', () => {
@@ -41,6 +43,7 @@ describe('Adding a page via composer', () => {
             cy.get(Composer.text('name')).type('testing blog entry', { scrollBehavior: 'bottom' })
         })
         it('enters the url of the blog', () => {
+            cy.wait(100) // wait for the js to autofill
             cy.get(Composer.text('url_slug')).scrollIntoView({ easing: "linear", duration: 1, offset: { top: -200, left: 0 } }).clear({ scrollBehavior: 'bottom' }).type('test-blog-entry', { scrollBehavior: 'bottom' })
         })
         it('enters a short description', () => {
@@ -154,12 +157,29 @@ describe('Editing a page via composer', () => {
         })
         it('saves the new version', () => {
             cy.get(Composer.preview).click()
+            cy.wait(1000)
 
         })
         it('visits the blog', () => {
             cy.visit('/blog/test-blog-entry')
+
+            cy.get(Toolbar.bar).then(($bar => {
+                let checkIn = $bar.find('li[data-guide-toolbar-action="check-in"] a[data-toolbar-action="check-in"]')
+                if (checkIn && checkIn.length > 0) {
+                    cy.wrap(checkIn).click()
+                    cy.get(CheckInPanel.save).click()
+
+                }
+            }))
             cy.get(Notification.infoPrimaryButton).should('be.visible')
             cy.title().should('contain', 'testing blog entry - edited')
         })
+        /*it('deletes the blog', () => {
+            cy.get(Toolbar.pageSettings).click()
+            cy.get(PageSettings.deletePage).scrollIntoView().click()
+            cy.get(Dialog.dangerButton).scrollIntoView().click()
+            cy.visit('/blog/test-blog-entry', { failOnStatusCode: false })
+            cy.get('.ccm-page').contains('404')
+        })*/
     })
 })
