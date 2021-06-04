@@ -215,8 +215,10 @@ describe('Testing the basic blocks', () => {
         })
         it('it adds an image from table view', () => {
             cy.fileManager('open')
+            cy.wait(50)
             cy.get(FileSelect.menuItem).contains('File Manager').scrollIntoView().click()
             cy.get(FileSelect.sort).scrollIntoView().click()
+            cy.wait(100)
             cy.fileManager('select', 'subway')
         })
         it('it adds a hover image from recent uploads', () => {

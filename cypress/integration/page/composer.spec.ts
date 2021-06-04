@@ -28,10 +28,10 @@ describe('Adding a page via composer', () => {
     describe('Add a blog entry via composer', () => {
         it('opens the sitemap', () => {
             cy.get(Toolbar.addPage).click()
+            cy.wait(100) // wait for the nodes to populate
         })
         it('clicks the blog type', () => {
             cy.get(SitemapPanel.createPageLink).contains('Blog Entry').click()
-
         })
     })
     describe('Enters the details of the blog entry', () => {
@@ -53,7 +53,7 @@ describe('Adding a page via composer', () => {
                 $review.parent().find('span[role=button]').trigger('click')
             })
             cy.wait('@loadingSubNodes').its('response.statusCode').should('eq', 200)
-            cy.wait(1000) // wait for the nodes to populate
+            cy.wait(100) // wait for the nodes to populate
             cy.get(Composer.topicTreeLink(29) + '>span.fancytree-title').contains('Movies').then(($review) => {
                 $review.parent().find('span[role=checkbox]').trigger('click')
             })
