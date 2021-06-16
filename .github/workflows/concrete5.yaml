@@ -1,13 +1,11 @@
 name: UI Tests
 
 on:
-  # The end to end test suite was introduced in WordPress 5.3.
   pull_request:
   push:
       branches:
           - main
           - 'release/**'
-# Cancels all previous workflow runs for pull requests that have not completed.
 concurrency:
   # The concurrency group contains the workflow name and the branch name for pull requests
   # or the commit hash for any other events.
@@ -15,42 +13,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-#   install-windows:
-#     runs-on: windows-2019
-#     services:
-#       # Label used to access the service container
-#       concrete:
-#         # Docker Hub image
-#         image: mlocati/docker5:develop
-#         #
-#         ports:
-#           # Opens tcp port 6379 on the host and service container
-#           - 8080:80 
-#           - 33306:3306
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v2
-# 
-#       - name: Cypress install
-#         uses: cypress-io/github-action@v2
-#         with:
-#           runTests: false
-#           wait-on: 'http://localhost:8080'
-# 
-#       - name: General debug information
-#         run: |
-#           npm --version
-#           node --version
-#           curl --version
-#           git --version
-#           svn --version
-# 
-#       - name: Save build folder
-#         uses: actions/upload-artifact@v2
-#         with:
-#           name: build
-#           if-no-files-found: error
-#           path: build
   setup-server-develop:
     runs-on: ubuntu-latest
     steps:
@@ -208,113 +170,3 @@ jobs:
             cypress/screenshots
             cypress/videos
           retention-days: 2
-
-
-#   ui-chrome-mobile-tests:
-#     timeout-minutes: 15
-#     runs-on: ubuntu-latest
-#     container: cypress/browsers:node14.16.0-chrome90-ff88
-#     needs: install
-#     strategy:
-#       # when one test fails, DO NOT cancel the other
-#       # containers, because this will kill Cypress processes
-#       # leaving the Dashboard hanging ...
-#       # https://github.com/cypress-io/github-action/issues/48
-#       fail-fast: false
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v2# 
-
-#       - name: Download the build folders
-#         uses: actions/download-artifact@v2
-#         with:
-#           name: build
-#           path: build
-
-#       - name: "UI Tests - Chrome - Mobile"
-#         uses: cypress-io/github-action@v2
-#         with:
-#           config: "viewportWidth=375,viewportHeight=667"
-#           start: yarn start:ci
-#           wait-on: "http://localhost:8080"
-#           wait-on-timeout: 120
-#           browser: chrome
-#           record: false
-#           group: "UI - Chrome - Mobile"
-#           spec: cypress/tests/ui/*
-#         env:
-
-#           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-#           # Recommended: pass the GitHub token lets this action correctly
-#           # determine the unique run id necessary to re-run the checks
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-# DISABLED FOR NOW
-#   ui-firefox-mobile-tests:
-#     timeout-minutes: 15
-#     runs-on: ubuntu-latest
-#     container:
-#       image: cypress/browsers:node14.16.0-chrome90-ff88
-#       options: --user 1001
-#     needs: install
-#     strategy:
-      # when one test fails, DO NOT cancel the other
-      # containers, because this will kill Cypress processes
-      # leaving the Dashboard hanging ...
-      # https://github.com/cypress-io/github-action/issues/48
-#       fail-fast: false
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v2
-
-#       - name: Download the build folders
-#         uses: actions/download-artifact@v2
-#         with:
-#           name: build
-#           path: build
-
-#       - name: "UI Tests - Firefox - Mobile"
-#         uses: cypress-io/github-action@v2
-#         with:
-#           config: "viewportWidth=375,viewportHeight=667"
-#           start: yarn start:ci
-#           wait-on: "http://localhost:8080"
-#           wait-on-timeout: 120
-#           browser: firefox
-#           record: false
-#           group: "UI - Firefox - Mobile"
-#           spec: cypress/tests/ui/*
-#         env:
-
-#           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-#           # Recommended: pass the GitHub token lets this action correctly
-#           # determine the unique run id necessary to re-run the checks
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-#   ui-windows-tests:
-#     timeout-minutes: 40
-#     runs-on: windows-2019
-#     needs: install-windows
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v2
-# 
-#       - name: Download the build folders
-#         uses: actions/download-artifact@v2
-#         with:
-#           name: build
-#           path: build
-# 
-#       - name: "UI Tests - Electron - Windows"
-#         uses: cypress-io/github-action@v2
-#         with:
-#           start: yarn start:ci
-#           wait-on: "http://localhost:8080"
-#           wait-on-timeout: 120
-#           record: false
-#           group: "UI - Electron - Windows"
-#           spec: cypress/tests/ui/*
-#         env:
-#           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-#           # Recommended: pass the GitHub token lets this action correctly
-#           # determine the unique run id necessary to re-run the checks
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
