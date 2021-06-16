@@ -1,11 +1,3 @@
----
-name: "\U0001F4DC Documentation"
-about: "I have a fix for the documentation"
-title: "Documentation Update"
-labels: "i: documentation :scroll:"
-assignees: ""
----
-
 <!--- Provide a general summary of your changes in the Title above -->
 
 ## Description

@@ -1,11 +1,3 @@
----
-name: "\U0001F41E Bug Fix"
-about: "Fixing an existing bug \U0001F41E."
-title: "Bug Fix"
-labels: "i: bug :beetle:"
-assignees: ""
----
-
 <!--- Provide a general summary of your changes in the Title above -->
 
 ## Description
