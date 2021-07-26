@@ -37,9 +37,9 @@ describe('Testing the navigation blocks', () => {
     describe('testing FAQ block', () => {
         it('adds the FAQ to block to main area', () => {
             cy.get(Area.zoneHandle('Main')).click('bottom')
-            cy.intercept('*ccm/system/panels/add*&tab=blocks').as('addPanel')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
+            cy.intercept('*/ccm/system/panels/add*').as('addPanel')
             cy.get(AddPanel.dropdownItemBlocks).click() // reset to blocks
             cy.wait('@addPanel')
             cy.get(Block.tile('faq')).scrollIntoView().click('bottom')
@@ -90,10 +90,11 @@ describe('Testing the navigation blocks', () => {
 
     describe('testing RSS Displayer block', () => {
         it('adds the RSS Displayer to block to main area', () => {
+
             cy.get(Area.zoneHandle('Main')).click('bottom')
-            cy.intercept('*ccm/system/panels/add*&tab=blocks').as('addPanel')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
+            cy.intercept('*/ccm/system/panels/add*').as('addPanel')
             cy.get(AddPanel.dropdownItemBlocks).click() // reset to blocks
             cy.wait('@addPanel')
             cy.get(Block.tile('rss_displayer')).scrollIntoView().click('bottom')

@@ -84,7 +84,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: block-test-failure-${{ matrix.browser }}
+          name: block-test-failure-${{ matrix.browser }}-${{matrix.concreteVersion}}
           path: |
             cypress/screenshots
             cypress/videos
@@ -136,7 +136,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: page-test-failure-${{ matrix.browser }}
+          name: page-test-failure-${{ matrix.browser }}-${{matrix.concreteVersion}}
           path: |
             cypress/screenshots
             cypress/videos
@@ -186,7 +186,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: dashboard-test-failure-${{ matrix.browser }}
+          name: dashboard-test-failure-${{ matrix.browser }}-${{matrix.concreteVersion}}
           path: |
             cypress/screenshots
             cypress/videos
