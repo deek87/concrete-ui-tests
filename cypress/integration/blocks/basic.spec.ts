@@ -30,7 +30,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Toolbar.addPage).scrollIntoView().click()
         })
         it('clicks the empty page type', () => {
-            cy.get(SitemapPanel.createPageLink).contains('Empty Page').scrollIntoView().click()
+            cy.get(SitemapPanel.createPageLink).contains('Empty Page').scrollIntoView().click({ force: true })
         })
     })
 
@@ -278,7 +278,7 @@ describe('Testing the basic blocks', () => {
         })
         it('tests constrain image size and adds file link', () => {
             cy.get(Block.dialog).should('be.visible')
-            cy.get(Block.dialog + ' ' + Form.checkbox('constrainImage')).scrollIntoView().click('bottom')
+            cy.get(Block.dialog + ' ' + Form.select('sizingOption')).scrollIntoView().select('Constrain Size')
             cy.get(Block.dialog + ' ' + Form.number('maxWidth')).scrollIntoView().click('bottom').type('150')
             cy.get(Block.dialog + ' ' + Form.number('maxHeight')).scrollIntoView().click('bottom').type('150')
             cy.get(Block.dialog + ' ' + Form.select('imageLink__which')).scrollIntoView().select('File')

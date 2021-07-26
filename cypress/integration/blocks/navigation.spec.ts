@@ -30,7 +30,7 @@ describe('Testing the navigation blocks', () => {
             cy.get(Toolbar.addPage).click()
         })
         it('clicks the empty page type', () => {
-            cy.get(SitemapPanel.createPageLink).contains('Empty Page').click()
+            cy.get(SitemapPanel.createPageLink).contains('Empty Page').scrollIntoView().click({ force: true })
         })
     })
 
