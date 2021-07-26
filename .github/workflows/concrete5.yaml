@@ -57,11 +57,12 @@ jobs:
     needs: setup-server-develop
     steps:
       - name: Setup ConcreteCMS Server
+      - if: matrix.concreteVersion =='develop'  
         run: "docker run -d -p 8080:80 mlocati/docker5:develop-full"
-        if: matrix.concreteVersion == develop
+        
       
       - name: Setup ConcreteCMS
-        if: matrix.concreteVersion == rc9
+      - if: matrix.concreteVersion == 'rc9'
         run: "docker run -d -p 8080:80 -e 'CCM_ARCHIVE=https://github.com/concrete5/concrete5/tree/9.0rc' mlocati/docker5:develop-full"
 
       - name: Checkout
@@ -106,11 +107,11 @@ jobs:
     needs: setup-server-develop
     steps:
       - name: Setup ConcreteCMS Server
+      - if: matrix.concreteVersion =='develop'
         run: "docker run -d -p 8080:80 mlocati/docker5:develop-full"
-        if: matrix.concreteVersion == develop
       
       - name: Setup ConcreteCMS
-        if: matrix.concreteVersion == rc9
+      - if: matrix.concreteVersion == 'rc9'
         run: "docker run -d -p 8080:80 -e 'CCM_ARCHIVE=https://github.com/concrete5/concrete5/tree/9.0rc' mlocati/docker5:develop-full"
 
 
@@ -156,11 +157,12 @@ jobs:
     needs: setup-server-develop
     steps:
       - name: Setup ConcreteCMS Server
+      - if: matrix.concreteVersion == 'develop'
         run: "docker run -d -p 8080:80 mlocati/docker5:develop-full"
-        if: matrix.concreteVersion == develop
+        
       
       - name: Setup ConcreteCMS
-        if: matrix.concreteVersion == rc9
+      - if: matrix.concreteVersion == 'rc9'
         run: "docker run -d -p 8080:80 -e 'CCM_ARCHIVE=https://github.com/concrete5/concrete5/tree/9.0rc' mlocati/docker5:develop-full"
 
       - name: Checkout
