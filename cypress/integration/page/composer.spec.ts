@@ -32,14 +32,15 @@ describe('Adding a page via composer', () => {
         })
         it('clicks the blog type', () => {
             cy.get(SitemapPanel.createPageLink).should('have.length.at.least', 1)
+            cy.intercept('*/ccm/system/tree/node/load_startin*').as('loadStart')
             cy.get(SitemapPanel.createPageLink).contains('Blog Entry').scrollIntoView().click({ force: true }) // sometimes the tooltip hides part of this -_-
+            cy.wait('@loadStart')
 
         })
     })
     describe('Enters the details of the blog entry', () => {
 
         it('enters the name of the blog', () => {
-            cy.intercept('*//ccm/system/tree/node/load_startin*').as('loadStart').wait('@loadStart')
             cy.get(Composer.text('name')).type('testing blog entry', { scrollBehavior: 'bottom' })
         })
         it('enters the url of the blog', () => {
@@ -115,8 +116,9 @@ describe('Editing a page via composer', () => {
 
     describe('Open the composer editor', () => {
         it('opens the page settings', () => {
+            cy.intercept('*/ccm/system/tree/node/load_startin*').as('loadStart')
             cy.get(Toolbar.pageSettings).click()
-            cy.intercept('*//ccm/system/tree/node/load_startin*').as('loadStart').wait('@loadStart')
+            cy.wait('@loadStart')
         })
     })
     describe('Enters the details of the blog entry', () => {
@@ -174,12 +176,12 @@ describe('Editing a page via composer', () => {
             cy.get(Notification.infoPrimaryButton).should('be.visible')
             cy.title().should('contain', 'testing blog entry - edited')
         })
-        /*it('deletes the blog', () => {
+        it('deletes the blog', () => {
             cy.get(Toolbar.pageSettings).click()
             cy.get(PageSettings.deletePage).scrollIntoView().click()
             cy.get(Dialog.dangerButton).scrollIntoView().click()
             cy.visit('/blog/test-blog-entry', { failOnStatusCode: false })
             cy.get('.ccm-page').contains('404')
-        })*/
+        })
     })
 })

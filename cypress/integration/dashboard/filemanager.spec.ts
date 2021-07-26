@@ -95,7 +95,7 @@ describe('Testing the bookmark and favourites', () => {
             cy.intercept('*/ccm/system/tree/node/load_starting').as('loadNodes')
             cy.get(FileManager.headerJumpFolder).scrollIntoView().click()
             cy.wait('@loadNodes')
-            cy.get(FileManager.treeItem).contains('File Manager').click()
+            cy.get(FileManager.treeLabel).contains('File Manager').click()
 
             cy.get(FileManager.resultName).contains('Test Folder - 1').should('not.exist')
         })

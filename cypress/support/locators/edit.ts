@@ -140,7 +140,7 @@ export class PageSettings {
     static caching: string = PageSettings.baseMenuItem + ' > a[data-launch-panel-detail="page-caching"]'
     static mobilePreview: string = PageSettings.baseMenuItem + ' > a[data-launch-panel-detail="mobile-preview"]'
     static pagePreview: string = PageSettings.baseMenuItem + ' > a[data-launch-panel-detail="preview-page"]'
-    static deletePage: string = PageSettings.baseMenuItem + ' > a.dialog-launch[href*="/ccm/system/dialgs/page/delete?cID"]'
+    static deletePage: string = PageSettings.baseMenuItem + ' > a.dialog-launch[href*="/ccm/system/dialogs/page/delete?cID="]'
     static pageVersionTable: string = PageSettings.base + '[id=ccm-panel-page-versions] > table'
     static pageVersionCount: string = PageSettings.pageVersionTable + ' > tbody > tr'
     static activePageVersion: string = PageSettings.pageVersionCount + '.ccm-panel-page-version-approved';

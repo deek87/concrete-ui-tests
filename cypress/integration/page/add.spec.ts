@@ -57,7 +57,7 @@ describe('Adding content to a page', () => {
         cy.get(Notification.infoPrimaryButton).click()
         cy.get(Toolbar.pageSettings).click()
         cy.get(PageSettings.versions).click()
-        cy.get(PageSettings.pageVersionCount).should('have.length', 2)
+        cy.get(PageSettings.pageVersionCount).should('have.length.at.least', 2)
         cy.get(PageSettings.activePageVersionMenu).should('match', PageSettings.pageVersionMenu(2))
     })
     it('removes the new version', () => {
@@ -72,7 +72,7 @@ describe('Adding content to a page', () => {
         cy.get(PageSettings.popupMenu).should('be.visible')
         cy.get(PageSettings.popupDelete).click()
         cy.get(Notification.success).should('be.visible')
-        cy.get(PageSettings.pageVersionCount).should('have.length', 1)
+        cy.get(PageSettings.pageVersionCount).should('have.length.at.least', 1)
 
     })
 })
