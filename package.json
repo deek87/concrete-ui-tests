@@ -8,10 +8,10 @@
     "cypress:open": "cypress open",
     "cypress:record": "cypress run --record",
     "cypress:run": "cypress run",
-    "cypress:run:firefox": "cypress run -b firefox",
-    "cypress:run:edge": "cypress run -b edge",
-    "cypress:run:chrome": "cypress run -b chrome",
-    "ci:test": "cy2 run --record --key XXX --parallel"
+    "cypress:run:firefox": "cypress run -b firefox --headless",
+    "cypress:run:edge": "cypress run -b edge --headless",
+    "cypress:run:chrome": "cypress run -b chrome --headless",
+    "ci:test": "cy2 run --record --key XXX --parallel --headless"
   },
   "keywords": [
     "testing",

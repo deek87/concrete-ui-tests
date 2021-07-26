@@ -6,7 +6,7 @@ Cypress.Commands.add('enterEditMode', (block_handle: string = 'content') => {
 })
 
 Cypress.Commands.add('dragBlock', (block_handle: string, area_handle: string | string[], hasPopup: boolean = false) => {
-    cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+    cy.intercept('*/ccm/system/dialogs/page/add_block*').as('blockLoad')
     cy.enterEditMode(block_handle);
     let selector: string;
     if (Array.isArray(area_handle)) {
@@ -27,8 +27,9 @@ Cypress.Commands.add('dragBlock', (block_handle: string, area_handle: string | s
             cy.get(Block.tile(block_handle)).scrollIntoView().trigger('mousedown', { which: 1 });
 
             cy.get(Block.draggedTile).trigger('mousemove', { duration: 0, pageX: coords.left + coords.width * 0.4, pageY: coords.top + coords.height * 0.4 }).wait(100).trigger('mouseup', { force: true });
+            cy.wait('@blockLoad')
         })
-    cy.wait('@blockLoad')
+
     if (hasPopup) {
         return cy.get(Block.dialog).should('be.visible');
     }
