@@ -30,7 +30,7 @@ Cypress.Commands.add('login', (email: string, password: string, page: string = n
     cy.get('#uName').type(email)
     cy.get('#uPassword').type(password)
     cy.get('div.authentication-type > form button.btn-primary').click()
-    cy.getCookie('CONCRETE5_LOGIN').should('exist')
+    cy.getCookie('CONCRETE_LOGIN').should('exist')
     if (page) {
         cy.visit(page)
     }

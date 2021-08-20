@@ -15,7 +15,7 @@ describe('Testing the basic blocks', () => {
         //
         // the name of your cookies will likely be different
         // this is an example
-        Cypress.Cookies.preserveOnce('CONCRETE5_LOGIN', 'CONCRETE5')
+        Cypress.Cookies.preserveOnce('CONCRETE_LOGIN', 'CONCRETE')
     })
     it('logs in as admin', () => {
 
@@ -39,8 +39,8 @@ describe('Testing the basic blocks', () => {
 
             cy.get(Area.zoneHandle('Main')).click('bottom')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
+            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+&tab=blocks/).as('addPanel')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
-            cy.intercept('*/ccm/system/panels/add*').as('addPanel')
             cy.get(AddPanel.dropdownItemBlocks).click() // reset to blocks
             cy.wait('@addPanel')
             cy.get(Block.tile('content')).click('bottom')
@@ -146,7 +146,7 @@ describe('Testing the basic blocks', () => {
 
                 cy.get('@ckEditor').click().type('{movetoend}{enter}{enter}hello world - list 2 - option 1')
                 cy.get('@ckEditor').setSelection('hello world - list 2 - option 1')
-                cy.get(ckEditor.bulletedListButton).click()
+                cy.get(ckEditor.bulletedListButton).scrollIntoView().click()
                 cy.get(ckEditor.bulletedListButtonOn).should('be.visible')
                 cy.get('@ckEditor').setCursorAfter('hello world - list 2 - option 1')
                 cy.get('@ckEditor').type('{enter}hello world - list 2 - option 2')
@@ -154,7 +154,7 @@ describe('Testing the basic blocks', () => {
                 cy.get('@ckEditor').type('{enter}{enter}')
                 cy.get(ckEditor.bulletedListButtonOff).should('be.visible')
                 cy.get('@ckEditor').setSelection('hello world - list 2 - option 2')
-                cy.get(ckEditor.indentButton).click()
+                cy.get(ckEditor.indentButton).scrollIntoView().click()
             })
 
         })
@@ -174,7 +174,7 @@ describe('Testing the basic blocks', () => {
         it('adds the html to block to main area', () => {
             cy.get(Area.zoneHandle('Main')).click('bottom')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
-            cy.intercept('*/ccm/system/panels/add*').as('addPanel')
+            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+&tab=blocks/).as('addPanel')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
             cy.get(AddPanel.dropdownItemBlocks).click()
             cy.wait('@addPanel')
@@ -210,7 +210,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Area.zoneHandle('Page Footer')).click('bottom')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
-            cy.intercept('*/ccm/system/panels/add*').as('addPanel')
+            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+&tab=blocks/).as('addPanel')
             cy.get(AddPanel.dropdownItemBlocks).click()
             cy.wait('@addPanel')
             cy.get(Block.tile('image')).click('bottom')
@@ -366,7 +366,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Area.zoneHandle('Main')).click('bottom')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
-            cy.intercept('*/ccm/system/panels/add*').as('addPanel')
+            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+&tab=blocks/).as('addPanel')
             cy.get(AddPanel.dropdownItemBlocks).click()
             cy.wait('@addPanel')
             cy.get(Block.tile('file')).click('bottom')
@@ -416,7 +416,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Area.zoneHandle('Main')).click('bottom')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
-            cy.intercept('*/ccm/system/panels/add*').as('addPanel')
+            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+&tab=blocks/).as('addPanel')
             cy.get(AddPanel.dropdownItemBlocks).click()
             cy.wait('@addPanel')
             cy.get(Block.tile('horizontal_rule')).click('bottom')
@@ -433,7 +433,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Area.zoneHandle('Page Footer')).click('bottom')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
             cy.get(AddPanel.dropdownToggle).click()
-            cy.intercept('*/ccm/system/panels/add*').as('addPanel')
+            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+&tab=clipboard/).as('addPanel')
             cy.get(AddPanel.dropdownItemClipboard).click()
             cy.wait('@addPanel')
             cy.get(AddPanel.base + ' div[id="ccm-clipboard-container"] div[data-block-type-handle="horizontal_rule"]:first').click()
@@ -454,7 +454,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Toolbar.addBlock).click()
 
             cy.get(AddPanel.dropdownToggle).click()
-            cy.intercept('*/ccm/system/panels/add*').as('addPanel')
+            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+.*/).as('addPanel')
             cy.get(AddPanel.dropdownItemClipboard).click()
             cy.wait('@addPanel')
             cy.get(AddPanel.base + ' div[id="ccm-clipboard-container"] div[data-block-type-handle="horizontal_rule"]:first button.ccm-delete-clipboard-item').click()
@@ -482,7 +482,7 @@ describe('Testing the basic blocks', () => {
 
             cy.get(Area.popoverMenuAddBlock).click('bottom')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
-            cy.intercept('*/ccm/system/panels/add*').as('addPanel')
+            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+&tab=blocks/).as('addPanel')
             cy.get(AddPanel.dropdownItemBlocks).click()
             cy.wait('@addPanel')
             cy.get(Block.tile('feature')).click('bottom')

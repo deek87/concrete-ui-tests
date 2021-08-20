@@ -12,7 +12,7 @@ describe('Checking the add panel', () => {
         //
         // the name of your cookies will likely be different
         // this is an example
-        Cypress.Cookies.preserveOnce('CONCRETE5_LOGIN', 'CONCRETE5')
+        Cypress.Cookies.preserveOnce('CONCRETE_LOGIN', 'CONCRETE')
 
     })
     it('logs in as admin', () => {

@@ -89,7 +89,7 @@ export class AddPanel {
     static base = 'div[id="ccm-panel-add-block"] section'
     static search = AddPanel.base + ' > div.ccm-panel-header-search > input'
     static dropdownBase = AddPanel.base + ' > header > div[id="dropdown-menu"]'
-    static dropdownToggle = AddPanel.dropdownBase + ' h4[data-toggle="dropdown"]'
+    static dropdownToggle = AddPanel.dropdownBase + ' h4.dropdown-toggle'
     static dropdownItemBlocks = AddPanel.dropdownBase + ' div.dropdown-menu>a[data-panel-dropdown-tab="blocks"]'
     static dropdownItemClipboard = AddPanel.dropdownBase + ' div.dropdown-menu>a[data-panel-dropdown-tab="clipboard"]'
     static dropdownItemStacks = AddPanel.dropdownBase + ' div.dropdown-menu>a[data-panel-dropdown-tab="stacks"]'
