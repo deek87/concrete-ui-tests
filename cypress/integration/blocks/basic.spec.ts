@@ -39,7 +39,7 @@ describe('Testing the basic blocks', () => {
 
             cy.get(Area.zoneHandle('Main')).click('bottom')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
-            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+&tab=blocks/).as('addPanel')
+            cy.intercept(AddPanel.blockLink).as('addPanel')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
             cy.get(AddPanel.dropdownItemBlocks).click() // reset to blocks
             cy.wait('@addPanel')
@@ -174,7 +174,7 @@ describe('Testing the basic blocks', () => {
         it('adds the html to block to main area', () => {
             cy.get(Area.zoneHandle('Main')).click('bottom')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
-            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+&tab=blocks/).as('addPanel')
+            cy.intercept(AddPanel.blockLink).as('addPanel')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
             cy.get(AddPanel.dropdownItemBlocks).click()
             cy.wait('@addPanel')
@@ -210,7 +210,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Area.zoneHandle('Page Footer')).click('bottom')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
-            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+&tab=blocks/).as('addPanel')
+            cy.intercept(AddPanel.blockLink).as('addPanel')
             cy.get(AddPanel.dropdownItemBlocks).click()
             cy.wait('@addPanel')
             cy.get(Block.tile('image')).click('bottom')
@@ -237,8 +237,7 @@ describe('Testing the basic blocks', () => {
         it('it adds alt text and a title', () => {
             cy.get(Block.dialog + ' ' + Form.text('altText')).click('bottom').type('A nice picture of the subway')
             cy.get(Block.dialog + ' ' + Form.text('title')).click('bottom').type('Subway TIME!')
-
-            cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+            cy.intercept(Block.loadLink).as('blockLoad')
 
             cy.get(Block.addButton).click()
             cy.wait('@blockLoad')
@@ -262,7 +261,7 @@ describe('Testing the basic blocks', () => {
         })
         it('reopens edit mode', () => {
             cy.get(Area.zone('Page Footer')).find('div[data-block-type-handle="image"] img').as('sourceImage').should('be.visible')
-            cy.intercept('*/ccm/system/dialogs/block/edit*').as('blockEdit')
+            cy.intercept(Block.editLink).as('blockEdit')
             cy.get('@sourceImage').then($src => {
                 let picParent;
                 if ($src.parent()[0].nodeName.toLowerCase() === 'picture') {
@@ -283,11 +282,11 @@ describe('Testing the basic blocks', () => {
             cy.get(Block.dialog + ' ' + Form.number('maxHeight')).scrollIntoView().click('bottom').type('150')
             cy.get(Block.dialog + ' ' + Form.select('imageLink__which')).scrollIntoView().select('File')
             cy.get(Block.dialog + ' ' + Form.checkbox('openLinkInNewWindow')).scrollIntoView().click('bottom')
-            cy.intercept('*/ccm/system/file/get_json*').as('fileLoad')
+            cy.intercept(/.*\/ccm\/system\/file\/get_json.*/).as('fileLoad')
             cy.fileManager('open', 'imageLink_file')
             cy.fileManager('search', 'bridge', true)
             cy.wait('@fileLoad')
-            cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+            cy.intercept(Block.loadLink).as('blockLoad')
 
             cy.get(Block.addButton).click()
             cy.wait('@blockLoad')
@@ -312,7 +311,7 @@ describe('Testing the basic blocks', () => {
         })
         it('reopens edit mode', () => {
             cy.get(Area.zone('Page Footer')).find('div[data-block-type-handle="image"] img').as('sourceImage').should('be.visible')
-            cy.intercept('*/ccm/system/dialogs/block/edit*').as('blockEdit')
+            cy.intercept(Block.editLink).as('blockEdit')
             cy.get('@sourceImage').then($src => {
                 let picParent;
                 if ($src.parent()[0].nodeName.toLowerCase() === 'picture') {
@@ -330,7 +329,7 @@ describe('Testing the basic blocks', () => {
         it('tests constrain image size and page link', () => {
             cy.fileManager('clear', 'imageLink_file')
             cy.get(Block.dialog + ' ' + Form.select('imageLink__which')).scrollIntoView().select('Page')
-            cy.intercept('*/ccm/system/page/sitemap_data*').as('loadSitemapData')
+            cy.intercept(/.*\/ccm\/system\/page\/sitemap_data.*/).as('loadSitemapData')
             cy.sitemap('open', 'imageLink_page');
             cy.wait('@loadSitemapData')
             cy.wait(50)
@@ -338,7 +337,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Block.dialog + ' ' + Form.checkbox('cropImage')).click('bottom')
             cy.get(Block.dialog + ' ' + Form.number('maxWidth')).scrollIntoView().click('bottom').clear().type('200')
             cy.get(Block.dialog + ' ' + Form.number('maxHeight')).scrollIntoView().click('bottom').clear().type('200')
-            cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+            cy.intercept(Block.loadLink).as('blockLoad')
 
             cy.get(Block.addButton).click()
             cy.wait('@blockLoad')
@@ -366,7 +365,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Area.zoneHandle('Main')).click('bottom')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
-            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+&tab=blocks/).as('addPanel')
+            cy.intercept(AddPanel.blockLink).as('addPanel')
             cy.get(AddPanel.dropdownItemBlocks).click()
             cy.wait('@addPanel')
             cy.get(Block.tile('file')).click('bottom')
@@ -376,7 +375,7 @@ describe('Testing the basic blocks', () => {
             cy.fileManager('open')
             cy.fileManager('searchFile', 'balloon', true)
             cy.get(Block.dialog + ' ' + Form.text('fileLinkText')).scrollIntoView().click('bottom').type('Hello my ballon')
-            cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+            cy.intercept(Block.loadLink).as('blockLoad')
 
             cy.get(Block.addButton).click()
             cy.wait('@blockLoad')
@@ -392,7 +391,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Block.popupEdit).click('bottom')
             cy.get(Block.dialog).should('be.visible')
             cy.get(Block.dialog + ' ' + Form.checkbox('forceDownload')).scrollIntoView().click('bottom')
-            cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+            cy.intercept(Block.loadLink).as('blockLoad')
             cy.get(Block.dialog + ' ' + Form.text('fileLinkText')).scrollIntoView().click('bottom').clear().type('Hello my ballon!!')
             cy.get(Block.addButton).click()
             cy.wait('@blockLoad')
@@ -416,7 +415,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Area.zoneHandle('Main')).click('bottom')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
-            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+&tab=blocks/).as('addPanel')
+            cy.intercept(AddPanel.blockLink).as('addPanel')
             cy.get(AddPanel.dropdownItemBlocks).click()
             cy.wait('@addPanel')
             cy.get(Block.tile('horizontal_rule')).click('bottom')
@@ -433,7 +432,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Area.zoneHandle('Page Footer')).click('bottom')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
             cy.get(AddPanel.dropdownToggle).click()
-            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+&tab=clipboard/).as('addPanel')
+            cy.intercept(AddPanel.clipboardLink).as('addPanel')
             cy.get(AddPanel.dropdownItemClipboard).click()
             cy.wait('@addPanel')
             cy.get(AddPanel.base + ' div[id="ccm-clipboard-container"] div[data-block-type-handle="horizontal_rule"]:first').click()
@@ -454,7 +453,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Toolbar.addBlock).click()
 
             cy.get(AddPanel.dropdownToggle).click()
-            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+.*/).as('addPanel')
+            cy.intercept(AddPanel.clipboardLink).as('addPanel')
             cy.get(AddPanel.dropdownItemClipboard).click()
             cy.wait('@addPanel')
             cy.get(AddPanel.base + ' div[id="ccm-clipboard-container"] div[data-block-type-handle="horizontal_rule"]:first button.ccm-delete-clipboard-item').click()
@@ -482,7 +481,7 @@ describe('Testing the basic blocks', () => {
 
             cy.get(Area.popoverMenuAddBlock).click('bottom')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
-            cy.intercept(/\/(index\.php\/)?ccm\/system\/panels\/add\/\?cID=[\d]+&tab=blocks/).as('addPanel')
+            cy.intercept(AddPanel.blockLink).as('addPanel')
             cy.get(AddPanel.dropdownItemBlocks).click()
             cy.wait('@addPanel')
             cy.get(Block.tile('feature')).click('bottom')
@@ -502,7 +501,7 @@ describe('Testing the basic blocks', () => {
         it('it adds a link', () => {
             cy.get(Block.dialog + ' ' + Form.select('linkType')).scrollIntoView().select('External URL')
             cy.get(Block.dialog + ' ' + Form.text('externalLink')).scrollIntoView().click('bottom').type('https://google.com')
-            cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+            cy.intercept(Block.loadLink).as('blockLoad')
 
             cy.get(Block.addButton).click()
             cy.wait('@blockLoad')
@@ -518,7 +517,7 @@ describe('Testing the basic blocks', () => {
         it('changes the design of the block', () => {
 
             cy.get(Area.zone('Page Footer') + ' div[data-block-type-handle="feature"]').click()
-            cy.intercept('*/ccm/system/dialogs/block/design*').as('blockDesign');
+            cy.intercept(Block.designLink).as('blockDesign');
             cy.get(Block.popupDesign).click()
             cy.wait('@blockDesign')
             cy.get(Block.designBase).should('be.visible')
@@ -527,7 +526,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Block.designTemplateList).click()
 
             cy.get(Block.designTemplateItem).contains('Hover Description').click()
-            cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+            cy.intercept(Block.loadLink).as('blockLoad')
 
             cy.get(Block.designSave).click()
             cy.wait('@blockLoad')

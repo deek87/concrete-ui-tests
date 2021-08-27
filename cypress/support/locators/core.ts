@@ -11,6 +11,11 @@ export class Block {
     static tile(block_handle: string): string {
         return 'a[data-block-type-handle="' + block_handle + '"]'
     }
+    static loadLink: RegExp = /.*\/ccm\/system\/block\/render\/?.*/
+    static editLink: RegExp = /.*\/ccm\/system\/dialogs\/block\/edit\/?.*/
+    static addLink: RegExp = /.*\/ccm\/system\/dialogs\/page\/add_block\/?.*/
+    static designLink: RegExp = /.*\/ccm\/system\/dialogs\/block\/design\/?.*/
+
     static dialog: string = Dialog.base
     static draggedTile: string = 'a.ccm-block-edit-drag.ccm-panel-add-block-draggable-block-type'
     static addButton: string = Dialog.primaryButton
@@ -18,13 +23,13 @@ export class Block {
 
     static popupMenu: string = 'div[id="ccm-popover-menu-container"] > div[data-block-menu] > div.popover-inner > div.dropdown-menu:visible'
     static popupMenuItem: string = Block.popupMenu + ' > a'
-    static popupEdit: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href$="/ccm/system/dialogs/block/edit"]'
+    static popupEdit: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href*="/ccm/system/dialogs/block/edit"]'
     static popupCopy: string = Block.popupMenuItem + '[data-menu-action="block_scrapbook"]'
     static popupDelete: string = Block.popupMenuItem + '[data-menu-action="delete_block"]'
     static popupDesign: string = Block.popupMenuItem + '[data-menu-action="block_design"]'
-    static popupAdvanced: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href$="/ccm/system/dialogs/block/cache"]'
-    static popupPermissions: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href$="/ccm/system/dialogs/block/permissions/list"]'
-    static popupGuest: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href$="/ccm/system/dialogs/block/permissions/guest_access"]'
+    static popupAdvanced: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href*="/ccm/system/dialogs/block/cache"]'
+    static popupPermissions: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href*="/ccm/system/dialogs/block/permissions/list"]'
+    static popupGuest: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href*="/ccm/system/dialogs/block/permissions/guest_access"]'
     static designBase: string = 'form[id="ccm-inline-design-form"][data-target-element=block] ul.ccm-style-customizer-toolbar'
     static designTemplateList: string = Block.designBase + ' li.ccm-inline-toolbar-select button.dropdown-toggle'
     static designTemplateItem: string = Block.designBase + ' li.ccm-inline-toolbar-select div.dropdown-menu ul.dropdown-menu.inner li a[role=option] span'
@@ -84,7 +89,7 @@ export class Sitemap {
 
 export class PageSelect {
     static base: string = 'div[id="ccm-sitemap-search-selector"] div.container-fluid > div.row'
-    static menuBase: string = PageSelect.base + ' > div.col-4.border-right > ul'
+    static menuBase: string = PageSelect.base + ' > div.col-4.border-end > ul'
     static menuItem: string = PageSelect.menuBase + ' > li.nav-item > a.nav-link'
     static searchBase: string = PageSelect.base + ' div[data-concrete-page-chooser-search]'
     static searchForm: string = PageSelect.searchBase + ' form'
@@ -94,10 +99,10 @@ export class PageSelect {
 
 export class FileSelect {
     static base: string = 'div[data-choose="file-manager"] div.container-fluid > div.row '
-    static menuBase: string = FileSelect.base + ' > div.col-4.border-right > ul'
+    static menuBase: string = FileSelect.base + ' > div.col-4.border-end > ul'
     static menuItem: string = FileSelect.menuBase + ' > li.nav-item > a.nav-link'
     static header: string = FileSelect.base + ' header'
-    static sort: string = FileSelect.header + '> button[type=button].float-right'
+    static sort: string = FileSelect.header + '> button[type=button].float-end'
     static searchForm: string = FileSelect.base + 'div[id="search"] form'
     static search: string = FileSelect.searchForm + ' input[type=text]'
     static searchSubmit: string = FileSelect.searchForm + ' button[type=submit]'
@@ -160,6 +165,8 @@ export class Notification {
 }
 
 export class Dashboard {
+    static panelLink: RegExp = /.*\/ccm\/system\/panels\/dashboard.*/
+
     static content: string = 'div[id="ccm-dashboard-content"]'
     static contentFull: string = 'div[id="ccm-dashboard-content-full"]'
     static page: string = 'div[id="ccm-dashboard-page"]'
@@ -194,10 +201,10 @@ export class FileManager {
     static headerSearchBase: string = Dashboard.header + ' div.ccm-dashboard-header-search > div.ccm-header-search-form > form'
     static headerAdvancedSearch: string = FileManager.headerSearchBase + ' a[data-launch-dialog="advanced-search"]'
     static headerSearchInput: string = FileManager.headerSearchBase + ' input[type=search][id=keywords]'
-    static headerSearchSubmit: string = FileManager.headerSearchBase + ' div.input-group-append > button[type=submit]'
+    static headerSearchSubmit: string = FileManager.headerSearchBase + ' div.input-group > button.input-group-icon[type=submit]'
     static headerMenu: string = Dashboard.header + ' div.ccm-dashboard-header-menu'
     static headerIcons: string = FileManager.headerMenu + ' ul.ccm-dashboard-header-icons'
-    static maxItemsList: string = FileManager.headerMenu + ' div.form-inline > div.dropdown > button.btn.btn-secondary[type=button][data-toggle=dropdown]'
+    static maxItemsList: string = FileManager.headerMenu + ' div.form-inline > div.dropdown > button.btn.btn-secondary[type=button][data-bs-toggle=dropdown]'
     static maxItemsItem: string = FileManager.maxItemsList + ' + ul.dropdown-menu.show > li[data-items-per-page]'
     static maxItems(maxItems: number): string {
         return FileManager.maxItemsList + ' + ul.dropdown-menu.show > li[data-items-per-page="' + maxItems.toString() + '"]'
@@ -244,7 +251,7 @@ export class FileManager {
     static paginationActive: string = FileManager.paginationItem + '.active'
 
     static importDialogTabList: string = Dialog.base + ' ul[id=ccm-file-import-tab-menu]'
-    static importDialogTabItem: string = FileManager.importDialogTabList + ' > li.nav-item > a[data-toggle=tab]'
+    static importDialogTabItem: string = FileManager.importDialogTabList + ' > li.nav-item > a[data-bs-toggle=tab]'
     static importDialogActiveTab: string = FileManager.importDialogTabItem + '.active'
     static importDialogYourComputer: string = FileManager.importDialogTabItem + '[href="#your-computer"]'
     static importDialogIncoming: string = FileManager.importDialogTabItem + '[href="#incoming-directory"]'
@@ -258,7 +265,7 @@ export class FileManager {
     static importDialogFolderSelectorSearch: string = FileManager.importDialogFolderSelector + ' div.bs-searchbox > input[type=search]'
     static importDialogFolderSelectorList: string = FileManager.importDialogFolderSelector + ' div.inner.show[role=listbox] ul.dropdown-menu'
     static importDialogFolderSelectorItem: string = FileManager.importDialogFolderSelectorList + ' li > a[role=option]'
-    static importDialogNewFolderButton: string = FileManager.importDialogFolderContainer + ' div.input-group-prepend > a.ccm-file-uploader-create-new-directory-button'
+    static importDialogNewFolderButton: string = FileManager.importDialogFolderContainer + ' div.input-group > a.ccm-file-uploader-create-new-directory-button'
     static importDialogNewFolderName: string = Dialog.base + ' div.ccm-file-uploader-new-directory-name-container input[type=text].ccm-file-uploader-new-directory-name'
     static importDialogRemoteFilesTextbox: string = Dialog.base + 'div[id=remote-files] > div.ccm-remote-files-container > textarea.ccm-remote-file-url'
 

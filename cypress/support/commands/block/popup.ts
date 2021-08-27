@@ -3,7 +3,7 @@
 import { Block, Dialog, Notification } from "../../locators/core"
 
 Cypress.Commands.add('saveBlock', () => {
-    cy.intercept('*/ccm/system/block/render*').as('blockLoad')
+    cy.intercept(Block.loadLink).as('blockLoad')
     cy.get(Block.addButton).click()
     cy.wait('@blockLoad')
     cy.get(Notification.success).should('be.visible')

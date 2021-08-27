@@ -86,6 +86,10 @@ export class Toolbar {
 }
 
 export class AddPanel {
+    static blockLink: RegExp = /.*\/(index\.php\/)?ccm\/system\/panels\/add\/?\?cID=[\d]+&tab=blocks/
+    static clipboardLink: RegExp = /.*\/(index\.php\/)?ccm\/system\/panels\/add\/?\?cID=[\d]+&tab=clipboard/
+    static genericLink: RegExp = /.*\/(index\.php\/)?ccm\/system\/panels\/add\/?\?cID=[\d]+&tab=.*/
+    static panelLink: RegExp = /.*\/(index\.php\/)?ccm\/system\/panels\/page\/?\?cID=[\d]+.*/
     static base = 'div[id="ccm-panel-add-block"] section'
     static search = AddPanel.base + ' > div.ccm-panel-header-search > input'
     static dropdownBase = AddPanel.base + ' > header > div[id="dropdown-menu"]'
@@ -134,7 +138,7 @@ export class AddPanel {
 export class PageSettings {
     static base: string = 'div[id=ccm-panel-page] section'
     static baseMenuItem: string = PageSettings.base + ' > menu > li'
-    static versions: string = PageSettings.baseMenuItem + ' > a[data-launch-sub-panel-url$="/ccm/system/panels/page/versions"]'
+    static versions: string = PageSettings.baseMenuItem + ' > a[data-launch-sub-panel-url*="/ccm/system/panels/page/versions"]'
     static permissions: string = PageSettings.baseMenuItem + ' > a[data-launch-panel-detail="page-permissions"]'
     static attributes: string = PageSettings.baseMenuItem + ' > a[data-launch-panel-detail="page-attributes"]'
     static caching: string = PageSettings.baseMenuItem + ' > a[data-launch-panel-detail="page-caching"]'

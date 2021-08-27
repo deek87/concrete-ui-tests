@@ -32,7 +32,7 @@ describe('Adding a page via composer', () => {
         })
         it('clicks the blog type', () => {
             cy.get(SitemapPanel.createPageLink).should('have.length.at.least', 1)
-            cy.intercept('*/ccm/system/tree/node/load_startin*').as('loadStart')
+            cy.intercept(/.*\/ccm\/system\/tree\/node\/load_starting.*/).as('loadStart')
             cy.get(SitemapPanel.createPageLink).contains('Blog Entry').scrollIntoView().click({ force: true }) // sometimes the tooltip hides part of this -_-
             cy.wait('@loadStart')
 
@@ -51,7 +51,7 @@ describe('Adding a page via composer', () => {
             cy.get(Composer.textArea('description')).scrollIntoView({ easing: "linear", duration: 1, offset: { top: -200, left: 0 } }).type('This is an example description{enter}If you would like to know more{enter}Vist concrete5.co.jp', { scrollBehavior: 'bottom' })
         })
         it('selects the topic', () => {
-            cy.intercept('*/ccm/system/tree/node/load?treeNodeParentID=*').as('loadingSubNodes')
+            cy.intercept(/.*\/ccm\/system\/tree\/node\/load\?treeNodeParentID=[\d]+.*/).as('loadingSubNodes')
             cy.get(Composer.topicTree(29)).scrollIntoView()
             cy.get(Composer.topicTreeLink(29) + '>span.fancytree-title').contains('Reviews').then(($review) => {
                 $review.parent().find('span[role=button]').trigger('click')
@@ -116,7 +116,7 @@ describe('Editing a page via composer', () => {
 
     describe('Open the composer editor', () => {
         it('opens the page settings', () => {
-            cy.intercept('*/ccm/system/tree/node/load_startin*').as('loadStart')
+            cy.intercept(/.*\/ccm\/system\/tree\/node\/load_starting.*/).as('loadStart')
             cy.get(Toolbar.pageSettings).click()
             cy.wait('@loadStart')
         })

@@ -47,7 +47,7 @@ describe('Testing the bookmark and favourites', () => {
         cy.get(Dashboard.activeMenuItem).should('have.length', '6')
     })
     it('reloads the dashboard panel', () => {
-        cy.intercept('*/ccm/system/panels/dashboard*').as('dashboard');
+        cy.intercept(Dashboard.panelLink).as('dashboard');
         cy.get(Dashboard.toolbarPanel).scrollIntoView().click()
         cy.get(Dashboard.toolbarPanel).scrollIntoView().click()
         cy.wait('@dashboard');
@@ -66,7 +66,7 @@ describe('Testing the bookmark and favourites', () => {
         cy.get(Dashboard.activeMenuItem).should('have.length', '7')
     })
     it('reloads the dashboard panel', () => {
-        cy.intercept('*/ccm/system/panels/dashboard*').as('dashboard');
+        cy.intercept(Dashboard.panelLink).as('dashboard');
         cy.get(Dashboard.toolbarPanel).scrollIntoView().click()
         cy.get(Dashboard.toolbarPanel).scrollIntoView().click()
         cy.wait('@dashboard');

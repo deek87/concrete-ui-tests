@@ -46,7 +46,7 @@ describe('Testing the bookmark and favourites', () => {
             cy.get(FileManager.importDialogNewFolderName).scrollIntoView().type('Test Folder - 1')
         })
         it('uploads the file', () => {
-            cy.intercept('*/ccm/system/file/upload_complete').as('uploadComplete')
+            cy.intercept(/.*\/ccm\/system\/file\/upload_complete\/?/).as('uploadComplete')
             cy.get(Dialog.primaryButton).scrollIntoView().click()
             cy.wait('@uploadComplete')
             //cy.get(Notification.success).should('be.visible')
@@ -58,7 +58,7 @@ describe('Testing the bookmark and favourites', () => {
         })
         it('deletes the file', () => {
             cy.get(FileManager.resultName).contains('sample_curry.jpeg').then($result => {
-                const fileMenu = $result.parent().parent().find('td.ccm-search-results-menu-launcher button[data-toggle=dropdown]');
+                const fileMenu = $result.parent().parent().find('td.ccm-search-results-menu-launcher button[data-bs-toggle=dropdown]');
                 fileMenu.trigger('mouseover')
 
                 cy.wrap(fileMenu).click()
@@ -72,16 +72,16 @@ describe('Testing the bookmark and favourites', () => {
             cy.get(FileManager.searchResults + ' > tbody').children().should('have.length', '0')
         })
         it('removes the folder', () => {
-            cy.intercept('*/ccm/system/tree/node/load_starting').as('loadNodes')
+            cy.intercept(/.*\/ccm\/system\/tree\/node\/load_starting.*/).as('loadNodes')
             cy.get(FileManager.headerJumpFolder).scrollIntoView().click()
             cy.wait('@loadNodes')
             cy.wait(50)
             cy.get(FileManager.treeItem).contains('File Manager').click()
-            cy.get(FileManager.headerSearchInput).scrollIntoView().type('Test Folder - 1')
-            cy.get(FileManager.headerSearchSubmit).click()
+            cy.get(FileManager.headerSearchInput).type('Test Folder - 1', { force: true })
+            cy.get(FileManager.headerSearchSubmit).click({ force: true }) // Force because bootstrap positioning is weird
             cy.get(FileManager.resultName).contains('Test Folder - 1').then($result => {
 
-                const fileMenu = $result.parent().parent().find('td.ccm-search-results-menu-launcher button[data-toggle=dropdown]')
+                const fileMenu = $result.parent().parent().find('td.ccm-search-results-menu-launcher button[data-bs-toggle=dropdown]')
 
                 fileMenu.trigger('mouseover')
 
@@ -92,7 +92,7 @@ describe('Testing the bookmark and favourites', () => {
             cy.get(Dialog.dangerButton).click()
         })
         it('verifies the folder has been deleted', () => {
-            cy.intercept('*/ccm/system/tree/node/load_starting').as('loadNodes')
+            cy.intercept(/.*\/ccm\/system\/tree\/node\/load_starting.*/).as('loadNodes')
             cy.get(FileManager.headerJumpFolder).scrollIntoView().click()
             cy.wait('@loadNodes')
             cy.get(FileManager.treeLabel).contains('File Manager').click()

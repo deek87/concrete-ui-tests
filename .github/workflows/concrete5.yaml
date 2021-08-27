@@ -52,7 +52,7 @@ jobs:
     strategy:
       matrix:
         browser: [firefox, chrome]
-        concreteVersion: [develop, rc9]
+        concreteVersion: [rc9]
       fail-fast: false
     needs: setup-server-develop
     steps:
@@ -102,7 +102,7 @@ jobs:
     strategy:      
       matrix:
         browser: [firefox, chrome]
-        concreteVersion: [develop, rc9]
+        concreteVersion: [rc9]
       fail-fast: false
     needs: setup-server-develop
     steps:
@@ -152,7 +152,7 @@ jobs:
     strategy:      
       matrix:
         browser: [firefox, chrome]
-        concreteVersion: [develop, rc9]
+        concreteVersion: [rc9]
       fail-fast: false
     needs: setup-server-develop
     steps:
