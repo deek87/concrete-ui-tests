@@ -12,6 +12,10 @@ Cypress.Commands.add('fileManager', (method: string, ...args: any[]) => {
         selectFile(args[0])
     }
 
+    if (method.toLowerCase().replace(/\_\s/ig, '') === 'selectfolder') {
+        selectFolder(args[0])
+    }
+
     if (method.toLowerCase().replace(/\_\s/ig, '') === 'open') {
         openFileManager(args[0])
     }
@@ -66,6 +70,18 @@ function selectFile(file: string | number) {
     cy.get(Dialog.primaryButton).click()
 }
 
+function selectFolder(folder: string) {
+    cy.intercept(/.*\/(?:index\.php?\/)ccm\/system\/file\/chooser\/get_folder_files\/[\d]+.*/).as('getFolderFiles')
+    cy.get(FileSelect.base).then($fm => {
+        if ($fm.find('button > i.fas.fa-th').length > 0) {
+            cy.get(FileSelect.gridLabel).contains(folder).scrollIntoView().click('bottom')
+        } else {
+            cy.get(FileSelect.tableLabel).contains(folder).scrollIntoView().click('bottom')
+        }
+    })
+    cy.wait('@getFolderFiles')
+}
+
 function searchFile(fileName: string, select: boolean = false) {
     selectSideMenu('Search')
     cy.get(FileSelect.search).scrollIntoView().clear().type(fileName)
@@ -76,5 +92,5 @@ function searchFile(fileName: string, select: boolean = false) {
 }
 
 function selectSideMenu(option: string = 'File Manager') {
-    cy.get(FileSelect.menuItem).contains(option).scrollIntoView().click('bottom')
+    cy.get(FileSelect.menuItem).contains(option).scrollIntoView().click('bottom', { force: true })
 }

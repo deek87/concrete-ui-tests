@@ -30,13 +30,13 @@ describe('Testing the navigation blocks', () => {
             cy.get(Toolbar.addPage).click()
         })
         it('clicks the empty page type', () => {
-            cy.get(SitemapPanel.createPageLink).contains('Empty Page').scrollIntoView().click({ force: true })
+            cy.get(SitemapPanel.createPageLink).contains(Cypress.env('is_atomik') ? 'Page' : 'Empty Page').scrollIntoView().click({ force: true })
         })
     })
 
     describe('testing FAQ block', () => {
         it('adds the FAQ to block to main area', () => {
-            cy.get(Area.zoneHandle('Main')).click('bottom')
+            cy.get(Area.zoneHandle('Main')).scrollIntoView().click('bottom')
             cy.get(Area.popoverMenuAddBlock).click('bottom')
             cy.get(AddPanel.dropdownToggle).should('be.visible').click()
             cy.intercept(AddPanel.genericLink).as('addPanel')

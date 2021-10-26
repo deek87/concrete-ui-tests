@@ -30,7 +30,7 @@ describe('Testing the basic blocks', () => {
             cy.get(Toolbar.addPage).scrollIntoView().click()
         })
         it('clicks the empty page type', () => {
-            cy.get(SitemapPanel.createPageLink).contains('Empty Page').scrollIntoView().click({ force: true })
+            cy.get(SitemapPanel.createPageLink).contains(Cypress.env('is_atomik') ? 'Page' : 'Empty Page').scrollIntoView().click({ force: true })
         })
     })
 
@@ -221,12 +221,23 @@ describe('Testing the basic blocks', () => {
             cy.get(FileSelect.menuItem).contains('File Manager').scrollIntoView().click()
             cy.get(FileSelect.sort).scrollIntoView().click()
             cy.wait(100)
-            cy.fileManager('select', 'subway')
+            if (!Cypress.env('is_atomik')) {
+                cy.fileManager('select', 'subway')
+            } else {
+                cy.fileManager('selectFolder', 'Gallery')
+                cy.fileManager('select', 'gallery-shoes')
+            }
+
         })
         it('it adds a hover image from recent uploads', () => {
             cy.fileManager('open', 'fOnstateID')
             cy.get(FileSelect.menuItem).contains('File Manager').scrollIntoView().click()
-            cy.fileManager('select', 'houses')
+            if (!Cypress.env('is_atomik')) {
+                cy.fileManager('select', 'houses')
+            } else {
+                cy.fileManager('selectFolder', 'Gallery')
+                cy.fileManager('select', 'gallery-skincare')
+            }
         })
         it('it adds an external link', () => {
             cy.get(Block.dialog + ' ' + Form.select('imageLink__which')).select('External URL')
@@ -260,7 +271,7 @@ describe('Testing the basic blocks', () => {
             })
         })
         it('reopens edit mode', () => {
-            cy.get(Area.zone('Page Footer')).find('div[data-block-type-handle="image"] img').as('sourceImage').should('be.visible')
+            cy.get(Area.zone('Page Footer')).find('div[data-block-type-handle="image"] img').as('sourceImage').should('be.visible').scrollIntoView()
             cy.intercept(Block.editLink).as('blockEdit')
             cy.get('@sourceImage').then($src => {
                 let picParent;
@@ -284,7 +295,12 @@ describe('Testing the basic blocks', () => {
             cy.get(Block.dialog + ' ' + Form.checkbox('openLinkInNewWindow')).scrollIntoView().click('bottom')
             cy.intercept(/.*\/ccm\/system\/file\/get_json.*/).as('fileLoad')
             cy.fileManager('open', 'imageLink_file')
-            cy.fileManager('search', 'bridge', true)
+            if (Cypress.env('is_atomik')) {
+                cy.fileManager('search', 'gallery-headphones', true)
+            } else {
+                cy.fileManager('search', 'bridge', true)
+            }
+
             cy.wait('@fileLoad')
             cy.intercept(Block.loadLink).as('blockLoad')
 
@@ -303,7 +319,7 @@ describe('Testing the basic blocks', () => {
                 } else {
                     picParent = $src.parent();
                 }
-                cy.wrap(picParent).should('have.attr', 'href').and('include', '/bridge')
+                cy.wrap(picParent).should('have.attr', 'href').and('include', !Cypress.env('is_atomik') ? '/bridge' : '/gallery-headphones')
                 cy.wrap(picParent).should('not.have.attr', 'target')
             })
             cy.get('@sourceImage2').invoke('width').should('be.lte', 150)
@@ -319,7 +335,7 @@ describe('Testing the basic blocks', () => {
                 } else {
                     picParent = $src.parent().parent();
                 }
-                cy.wrap(picParent).click()
+                cy.wrap(picParent).scrollIntoView().click()
             })
             cy.get(Block.popupEdit).click('bottom')
             cy.wait('@blockEdit')
@@ -373,7 +389,13 @@ describe('Testing the basic blocks', () => {
         it('selects a file', () => {
             cy.get(Block.dialog).should('be.visible')
             cy.fileManager('open')
-            cy.fileManager('searchFile', 'balloon', true)
+            if (!Cypress.env('is_atomik')) {
+                cy.fileManager('select', 'houses')
+            } else {
+                cy.get(FileSelect.menuItem).contains('File Manager').scrollIntoView().click()
+                cy.fileManager('selectFolder', 'Brand')
+                cy.fileManager('select', 'atomik-logo')
+            }
             cy.get(Block.dialog + ' ' + Form.text('fileLinkText')).scrollIntoView().click('bottom').type('Hello my ballon')
             cy.intercept(Block.loadLink).as('blockLoad')
 
