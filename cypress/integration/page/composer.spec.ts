@@ -52,13 +52,13 @@ describe('Adding a page via composer', () => {
         })
         it('selects the topic', () => {
             cy.intercept(/.*\/ccm\/system\/tree\/node\/load\?treeNodeParentID=[\d]+.*/).as('loadingSubNodes')
-            cy.get(Composer.topicTree(29)).scrollIntoView()
-            cy.get(Composer.topicTreeLink(29) + '>span.fancytree-title').contains('Reviews').then(($review) => {
+            cy.get(Composer.topicTree(Cypress.env('is_atomik') ? 26 : 29)).scrollIntoView()
+            cy.get(Composer.topicTreeLink(Cypress.env('is_atomik') ? 26 : 29) + '>span.fancytree-title').contains(Cypress.env('is_atomik') ? 'Products' : 'Reviews').then(($review) => {
                 $review.parent().find('span[role=button]').trigger('click')
             })
-            cy.wait('@loadingSubNodes').its('response.statusCode').should('eq', 200)
-            cy.wait(100) // wait for the nodes to populate
-            cy.get(Composer.topicTreeLink(29) + '>span.fancytree-title').contains('Movies').then(($review) => {
+
+            cy.wait(1000) // wait for the nodes to populate
+            cy.get(Composer.topicTreeLink(Cypress.env('is_atomik') ? 26 : 29) + '>span.fancytree-title').contains(Cypress.env('is_atomik') ? 'Sales' : 'Movies').then(($review) => {
                 $review.parent().find('span[role=checkbox]').trigger('click')
             })
         })
@@ -82,10 +82,12 @@ describe('Adding a page via composer', () => {
             cy.get('@ckEditor').type('{enter}', { scrollBehavior: 'center' })
         })
         it('publishes the blog', () => {
+            cy.intercept(Composer.publishLink).as('publish')
             cy.get(Composer.publish).click()
+            cy.wait('@publish').its('response.statusCode').should('eq', 200)
         })
         it('visits the blog', () => {
-            cy.visit('/blog/test-blog-entry')
+            cy.visit((Cypress.env('is_atomik') ? '/about' : '') + '/blog/test-blog-entry')
         })
     })
 })
@@ -110,7 +112,7 @@ describe('Editing a page via composer', () => {
 
 
     it('visits the test blog', () => {
-        cy.visit('/blog/test-blog-entry')
+        cy.visit((Cypress.env('is_atomik') ? '/about' : '') + '/blog/test-blog-entry')
         cy.title().should('contain', 'testing blog entry')
     })
 
@@ -132,9 +134,9 @@ describe('Editing a page via composer', () => {
         })
         it('changes topic', () => {
 
-            cy.get(Composer.topicTree(29)).scrollIntoView()
+            cy.get(Composer.topicTree(Cypress.env('is_atomik') ? 26 : 29)).scrollIntoView()
 
-            cy.get(Composer.topicTreeLink(29) + '>span.fancytree-title').contains('Sports').then(($review) => {
+            cy.get(Composer.topicTreeLink(Cypress.env('is_atomik') ? 26 : 29) + '>span.fancytree-title').contains(Cypress.env('is_atomik') ? 'Security' : 'Sports').then(($review) => {
                 $review.parent().find('span[role=checkbox]').trigger('click')
             })
         })
@@ -163,7 +165,7 @@ describe('Editing a page via composer', () => {
 
         })
         it('visits the blog', () => {
-            cy.visit('/blog/test-blog-entry')
+            cy.visit((Cypress.env('is_atomik') ? '/about' : '') + '/blog/test-blog-entry')
 
             cy.get(Toolbar.bar).then(($bar => {
                 let checkIn = $bar.find('li[data-guide-toolbar-action="check-in"] a[data-toolbar-action="check-in"]')
@@ -180,8 +182,8 @@ describe('Editing a page via composer', () => {
             cy.get(Toolbar.pageSettings).click()
             cy.get(PageSettings.deletePage).scrollIntoView().click()
             cy.get(Dialog.dangerButton).scrollIntoView().click()
-            cy.visit('/blog/test-blog-entry', { failOnStatusCode: false })
-            cy.get('.ccm-page').contains('404')
+            cy.visit((Cypress.env('is_atomik') ? '/about' : '') + '/blog/test-blog-entry', { failOnStatusCode: false })
+            cy.get('.ccm-page').contains('Page Not Found')
         })
     })
 })

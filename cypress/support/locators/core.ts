@@ -21,7 +21,7 @@ export class Block {
     static addButton: string = Dialog.primaryButton
     static cancelButton: string = Dialog.secondaryButton
 
-    static popupMenu: string = 'div[id="ccm-popover-menu-container"] > div[data-block-menu] > div.popover-inner > div.dropdown-menu:visible'
+    static popupMenu: string = 'div[id="ccm-popover-menu-container"] > div[data-block-menu] > div.popover-inner > div.dropdown-menu'
     static popupMenuItem: string = Block.popupMenu + ' > a'
     static popupEdit: string = Block.popupMenuItem + '[data-menu-action="block_dialog"][data-menu-href*="/ccm/system/dialogs/block/edit"]'
     static popupCopy: string = Block.popupMenuItem + '[data-menu-action="block_scrapbook"]'
@@ -53,7 +53,7 @@ export class Form {
         return this.fileSelectorInput + '[name="' + name + '"]'
     }
     static select(name: string): string {
-        return 'div.form-group select.form-control[name="' + name + '"]'
+        return 'div.form-group select.form-select[name="' + name + '"]'
     }
     static text(name: string): string {
         return 'div.form-group input[type="text"].form-control[name="' + name + '"]'

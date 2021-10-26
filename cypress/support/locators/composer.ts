@@ -24,4 +24,6 @@ export class Composer {
     static discard: string = Composer.formButtons + ' button[data-page-type-composer-form-btn="discard"]'
     static save: string = Composer.formButtons + ' button[data-page-type-composer-form-btn="exit"]'
     static exit: string = Composer.formButtons + ' button[data-page-type-composer-form-btn="exit"]'
+
+    static publishLink: RegExp = /.*\/ccm\/system\/panels\/details\/page\/composer\/publish.*/
 }
