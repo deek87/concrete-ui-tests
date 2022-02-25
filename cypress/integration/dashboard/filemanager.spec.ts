@@ -4,9 +4,6 @@ import { Toolbar } from "../../support/locators/edit"
 
 
 describe('Testing the bookmark and favourites', () => {
-    before(() => {
-        cy.clearCookies()
-    })
     beforeEach(() => {
         // before each test, we can automatically preserve the
         // 'session_id' and 'remember_token' cookies. this means they

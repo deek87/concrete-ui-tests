@@ -3,9 +3,6 @@ import { CheckInPanel, ckEditor, PageSettings, SitemapPanel, Toolbar } from "../
 import { Dialog, Notification } from "../../support/locators/core"
 
 describe('Adding a page via composer', () => {
-    before(() => {
-        cy.clearCookies()
-    })
     beforeEach(() => {
         // before each test, we can automatically preserve the
         // 'session_id' and 'remember_token' cookies. this means they
@@ -93,9 +90,6 @@ describe('Adding a page via composer', () => {
 })
 
 describe('Editing a page via composer', () => {
-    before(() => {
-        cy.clearCookies()
-    })
     beforeEach(() => {
         // before each test, we can automatically preserve the
         // 'session_id' and 'remember_token' cookies. this means they

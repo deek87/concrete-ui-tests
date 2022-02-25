@@ -2,9 +2,6 @@
 
 import { AddPanel } from "../../support/locators/edit"
 describe('Checking the add panel', () => {
-    before(() => {
-        cy.clearCookies()
-    })
     beforeEach(() => {
         // before each test, we can automatically preserve the
         // 'session_id' and 'remember_token' cookies. this means they
