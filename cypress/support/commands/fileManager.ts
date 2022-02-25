@@ -2,9 +2,7 @@
 
 import { Dialog, FileSelect, Form } from "../locators/core"
 
-Cypress.Commands.add('selectFile', (file: string | number) => {
-    selectFile(file)
-})
+
 
 Cypress.Commands.add('fileManager', (method: string, ...args: any[]) => {
 
