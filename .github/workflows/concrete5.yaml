@@ -52,18 +52,19 @@ jobs:
     strategy:
       matrix:
         browser: [firefox, chrome]
-        concreteVersion: [rc9]
+        concreteVersion: [develop,latest]
+        theme: [atomik, elemental]
       fail-fast: false
     needs: setup-server-develop
     steps:
-      - name: Setup ConcreteCMS Server
-        if: matrix.concreteVersion =='develop'  
-        run: "docker run -d -p 8080:80 mlocati/docker5:develop-full"
+      - name: Setup ConcreteCMS
+        if: matrix.concreteVersion == 'develop'
+        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}-full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:develop-full"
         
       
       - name: Setup ConcreteCMS
-        if: matrix.concreteVersion == 'rc9'
-        run: "docker run -d -p 8080:80 -e 'CCM_ARCHIVE=https://github.com/concrete5/concrete5/tree/9.0rc' mlocati/docker5:develop-full"
+        if: matrix.concreteVersion == 'latest'
+        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}-full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:latest-full"
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -76,15 +77,16 @@ jobs:
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
       - name: "Run Block Tests - ${{ matrix.browser }}"
-        run: "npm run ci:test -- -b ${{ matrix.browser }} --group 'Block - ${{ matrix.browser }} : ConcreteCMS' --ci-build-id `date +%s` --spec 'cypress/integration/blocks/*'"
+        run: "npm run ci:test -- -b ${{ matrix.browser }} --group 'Block - ${{ matrix.browser }} : ConcreteCMS : ${{ matrix.theme }}' --ci-build-id `date +%s` --spec 'cypress/integration/blocks/*'"
         env:
           CYPRESS_API_URL: "http://localhost:1234/"
           CI: true
+          CYPRESS_is_atomik: ${{ matrix.theme == 'atomik' }}
       - name: Save Screenshots and Videos
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: block-test-failure-${{ matrix.browser }}-${{matrix.concreteVersion}}
+          name: block-test-failure-${{ matrix.browser }}-${{matrix.concreteVersion}}-${{ matrix.theme }}
           path: |
             cypress/screenshots
             cypress/videos
@@ -102,17 +104,19 @@ jobs:
     strategy:      
       matrix:
         browser: [firefox, chrome]
-        concreteVersion: [rc9]
+        concreteVersion: [develop,latest]
+        theme: [atomik, elemental]
       fail-fast: false
     needs: setup-server-develop
     steps:
-      - name: Setup ConcreteCMS Server
-        if: matrix.concreteVersion =='develop'
-        run: "docker run -d -p 8080:80 mlocati/docker5:develop-full"
+      - name: Setup ConcreteCMS
+        if: matrix.concreteVersion == 'develop'
+        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}-full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:develop-full"
+        
       
       - name: Setup ConcreteCMS
-        if: matrix.concreteVersion == 'rc9'
-        run: "docker run -d -p 8080:80 -e 'CCM_ARCHIVE=https://github.com/concrete5/concrete5/tree/9.0rc' mlocati/docker5:develop-full"
+        if: matrix.concreteVersion == 'latest'
+        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}-full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:latest-full"
 
 
       - name: Checkout
@@ -131,12 +135,13 @@ jobs:
         run: "npm run ci:test --  --spec 'cypress/integration/page/*' -b ${{ matrix.browser }} --group 'Page - ${{ matrix.browser }} : ConcreteCMS' --ci-build-id `date +%s`"
         env:
           CYPRESS_API_URL: "http://127.0.0.1:1234/"
+          CYPRESS_is_atomik: ${{ matrix.theme == 'atomik' }}
           CI: true
       - name: Save Screenshots and Videos
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: page-test-failure-${{ matrix.browser }}-${{matrix.concreteVersion}}
+          name: page-test-failure-${{ matrix.browser }}-${{matrix.concreteVersion}}-${{ matrix.theme }}
           path: |
             cypress/screenshots
             cypress/videos
@@ -152,18 +157,18 @@ jobs:
     strategy:      
       matrix:
         browser: [firefox, chrome]
-        concreteVersion: [rc9]
+        concreteVersion: [develop,latest]
       fail-fast: false
     needs: setup-server-develop
     steps:
-      - name: Setup ConcreteCMS Server
+      - name: Setup ConcreteCMS
         if: matrix.concreteVersion == 'develop'
-        run: "docker run -d -p 8080:80 mlocati/docker5:develop-full"
+        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=atomik-full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:develop-full"
         
       
       - name: Setup ConcreteCMS
-        if: matrix.concreteVersion == 'rc9'
-        run: "docker run -d -p 8080:80 -e 'CCM_ARCHIVE=https://github.com/concrete5/concrete5/tree/9.0rc' mlocati/docker5:develop-full"
+        if: matrix.concreteVersion == 'latest'
+        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=atomik-full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:latest-full"
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -181,7 +186,7 @@ jobs:
         env:
           CYPRESS_API_URL: "http://127.0.0.1:1234/"
           CI: true
-
+          CYPRESS_is_atomik: true
       - name: Save Screenshots and Videos
         uses: actions/upload-artifact@v2
         if: failure()

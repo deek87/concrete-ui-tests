@@ -31,9 +31,9 @@ describe('Testing the bookmark and favourites', () => {
     describe('uploading file via drag and drop', () => {
         it('drags and drops a valid file', () => {
             if (Cypress.isBrowser('firefox')) {
-                cy.get(FileManager.searchResultsContainer).attachFile('sample_curry.jpeg', { subjectType: 'drag-n-drop' })
+                cy.get(FileManager.searchResultsContainer).selectFile('cypress/fixtures/sample_curry.jpeg', { action: 'drag-drop' })
             } else {
-                cy.get(FileManager.dropzoneFileInput).attachFile('sample_curry.jpeg', { subjectType: 'input' })
+                cy.get(FileManager.dropzoneFileInput).selectFile('cypress/fixtures/sample_curry.jpeg', { action: 'select' })
             }
 
         })
