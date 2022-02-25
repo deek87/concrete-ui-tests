@@ -102,7 +102,7 @@ export class FileSelect {
     static menuBase: string = FileSelect.base + ' > div.col-4.border-end > ul'
     static menuItem: string = FileSelect.menuBase + ' > li.nav-item > a.nav-link'
     static header: string = FileSelect.base + ' header'
-    static sort: string = FileSelect.header + '> button[type=button].float-end'
+    static sort: string = FileSelect.header + '> button[type=button].btn.btn-secondary'
     static searchForm: string = FileSelect.base + 'div[id="search"] form'
     static search: string = FileSelect.searchForm + ' input[type=text]'
     static searchSubmit: string = FileSelect.searchForm + ' button[type=submit]'

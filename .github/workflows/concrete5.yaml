@@ -59,12 +59,12 @@ jobs:
     steps:
       - name: Setup ConcreteCMS
         if: matrix.concreteVersion == 'develop'
-        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}-full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:develop-full"
+        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}_full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:develop-full"
         
       
       - name: Setup ConcreteCMS
         if: matrix.concreteVersion == 'latest'
-        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}-full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:latest-full"
+        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}_full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:latest-full"
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -111,12 +111,12 @@ jobs:
     steps:
       - name: Setup ConcreteCMS
         if: matrix.concreteVersion == 'develop'
-        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}-full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:develop-full"
+        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}_full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:develop-full"
         
       
       - name: Setup ConcreteCMS
         if: matrix.concreteVersion == 'latest'
-        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}-full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:latest-full"
+        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}_full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:latest-full"
 
 
       - name: Checkout
@@ -163,12 +163,12 @@ jobs:
     steps:
       - name: Setup ConcreteCMS
         if: matrix.concreteVersion == 'develop'
-        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=atomik-full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:develop-full"
+        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=atomik_full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:develop-full"
         
       
       - name: Setup ConcreteCMS
         if: matrix.concreteVersion == 'latest'
-        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=atomik-full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:latest-full"
+        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=atomik_full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:latest-full"
 
       - name: Checkout
         uses: actions/checkout@v2
