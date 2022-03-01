@@ -1,7 +1,10 @@
 ///<reference types="cypress" />
 import { Block, FileSelect, Notification } from '../../support/locators/core'
 import { CheckInPanel, ckEditor, PageSettings, Toolbar } from '../../support/locators/edit'
+before(() => {
 
+    cy.clearCookies();
+})
 describe('Adding content to a page', () => {
 
     beforeEach(() => {
@@ -38,12 +41,21 @@ describe('Adding content to a page', () => {
 
         cy.dragBlock('image', ['Main', 'Column 3'], true)
         cy.fileManager('open')
-        cy.fileManager('search', 'house')
+        if (!Cypress.env('is_atomik')) {
+            cy.fileManager('search', 'house')
+        } else {
+            cy.fileManager('search', 'gallery-watch')
+        }
+
         cy.get(FileSelect.sort).click()
         cy.get(FileSelect.tableRadio).should('have.length', 2)
         cy.get(FileSelect.sort).click()
         cy.get(FileSelect.gridLabel).should('have.length', 2)
-        cy.fileManager('search', 'houses', true)
+        if (!Cypress.env('is_atomik')) {
+            cy.fileManager('search', 'houses', true)
+        } else {
+            cy.fileManager('search', 'gallery-watch2', true)
+        }
         cy.get(Block.addButton).click('bottom')
         cy.get(Notification.success).should('be.visible')
     })
@@ -64,7 +76,9 @@ describe('Adding content to a page', () => {
         cy.get(PageSettings.versions).click()
         cy.get(PageSettings.pageVersionMenu(1)).click()
         cy.get(PageSettings.popupMenu).should('be.visible')
+        cy.intercept(/ccm\/system\/panels\/page\/versions\/approve\/?\?/).as('ApprovePageVersion')
         cy.get(PageSettings.popupApprove).click()
+        cy.wait('@ApprovePageVersion')
         cy.get(Notification.success).should('be.visible')
         cy.get(PageSettings.pageVersionMenu(2)).click()
         cy.get(PageSettings.popupMenu).should('be.visible')

@@ -1,7 +1,10 @@
 import { Composer } from "../../support/locators/composer"
 import { CheckInPanel, ckEditor, PageSettings, SitemapPanel, Toolbar } from "../../support/locators/edit"
 import { Dialog, Notification } from "../../support/locators/core"
+before(() => {
 
+    cy.clearCookies();
+})
 describe('Adding a page via composer', () => {
     beforeEach(() => {
         // before each test, we can automatically preserve the
@@ -99,10 +102,6 @@ describe('Editing a page via composer', () => {
         // this is an example
         Cypress.Cookies.preserveOnce('CONCRETE_LOGIN', 'CONCRETE')
     })
-    it('logs in as admin', () => {
-
-        cy.login(Cypress.env('admin_username'), Cypress.env('admin_password'))
-    })
 
 
     it('visits the test blog', () => {
@@ -153,6 +152,10 @@ describe('Editing a page via composer', () => {
             cy.get(ckEditor.underlineButtonOn).click({ scrollBehavior: 'center' })
             cy.get('@ckEditor').type('{enter}', { scrollBehavior: 'center' })
         })
+
+    })
+
+    describe('Save the new version and then delete the page', () => {
         it('saves the new version', () => {
             cy.get(Composer.preview).click()
             cy.wait(1000)
