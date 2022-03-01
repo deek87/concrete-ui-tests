@@ -49,6 +49,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: Build and export ConcreteCMS (Atomik Theme)
         uses: docker/build-push-action@v2
         with:
@@ -176,8 +179,9 @@ jobs:
         uses: actions/download-artifact@v2
         with: 
           name: ${{matrix.theme}}
+          path: /tmp
       - name: Load docker image for ${{matrix.theme}}
-        run: "docker load --input out.tar"
+        run: "docker load --input /tmp/output.tar"
 
       - name: Setup ConcreteCMS 
         run: "docker run -d -p 8080:80 concrete/develop:${{ matrix.theme}}"
@@ -229,8 +233,9 @@ jobs:
         uses: actions/download-artifact@v2
         with: 
           name: atomik
+          path: /tmp
       - name: Load docker image for atomik
-        run: "docker load --input out.tar"
+        run: "docker load --input /tmp/output.tar"
 
       - name: Setup ConcreteCMS 
         run: "docker run -d -p 8080:80 concrete/develop:atomik"
