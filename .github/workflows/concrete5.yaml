@@ -15,14 +15,19 @@ concurrency:
 
 jobs:
   setup-server-develop:
+    name: Setup ConcreteCMS Server
+    strategy:
+      matrix:
+        theme: [atomik, elemental]
     runs-on: ubuntu-latest
     steps:
-      - name: Setup ConcreteCMS
-        run: "docker pull mlocati/docker5:develop-full"
         
       - name: Checkout
         uses: actions/checkout@v2
       
+      - name: Setup ConcreteCMS
+        run: "DOCKER_BUILDKIT=0 docker build --build-arg CCM_STARTING_POINT=${{ matrix.theme}}_full -t concrete/develop:${{ matrix.theme}} - < support/dockerfile"
+
       - name: "Setup Node"
         uses: actions/setup-node@v2
         with:
@@ -52,19 +57,12 @@ jobs:
     strategy:
       matrix:
         browser: [firefox, chrome]
-        concreteVersion: [develop,latest]
         theme: [atomik, elemental]
       fail-fast: false
     needs: setup-server-develop
     steps:
       - name: Setup ConcreteCMS
-        if: matrix.concreteVersion == 'develop'
-        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}_full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:develop-full"
-        
-      
-      - name: Setup ConcreteCMS
-        if: matrix.concreteVersion == 'latest'
-        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}_full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:latest-full"
+        run: "docker run -d -p 8080:80 concrete/develop:${{ matrix.theme}}"
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -86,7 +84,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: block-test-failure-${{ matrix.browser }}-${{matrix.concreteVersion}}-${{ matrix.theme }}
+          name: block-test-failure-${{ matrix.browser }}-${{ matrix.theme }}
           path: |
             cypress/screenshots
             cypress/videos
@@ -104,20 +102,12 @@ jobs:
     strategy:      
       matrix:
         browser: [firefox, chrome]
-        concreteVersion: [develop,latest]
         theme: [atomik, elemental]
       fail-fast: false
     needs: setup-server-develop
     steps:
       - name: Setup ConcreteCMS
-        if: matrix.concreteVersion == 'develop'
-        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}_full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:develop-full"
-        
-      
-      - name: Setup ConcreteCMS
-        if: matrix.concreteVersion == 'latest'
-        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=${{ matrix.theme}}_full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:latest-full"
-
+        run: "docker run -d -p 8080:80 concrete/develop:${{ matrix.theme}}"
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -141,7 +131,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: page-test-failure-${{ matrix.browser }}-${{matrix.concreteVersion}}-${{ matrix.theme }}
+          name: page-test-failure-${{ matrix.browser }}-${{ matrix.theme }}
           path: |
             cypress/screenshots
             cypress/videos
@@ -157,19 +147,11 @@ jobs:
     strategy:      
       matrix:
         browser: [firefox, chrome]
-        concreteVersion: [develop,latest]
       fail-fast: false
     needs: setup-server-develop
     steps:
       - name: Setup ConcreteCMS
-        if: matrix.concreteVersion == 'develop'
-        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=atomik_full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:develop-full"
-        
-      
-      - name: Setup ConcreteCMS
-        if: matrix.concreteVersion == 'latest'
-        run: "docker run -d -p 8080:80 -e 'CCM_STARTING_POINT=atomik_full' -e 'CCM_PHP_VERSION=7.4' mlocati/docker5:latest-full"
-
+        run: "docker run -d -p 8080:80 concrete/develop:atomik"
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -191,7 +173,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: dashboard-test-failure-${{ matrix.browser }}-${{matrix.concreteVersion}}
+          name: dashboard-test-failure-${{ matrix.browser }}
           path: |
             cypress/screenshots
             cypress/videos
