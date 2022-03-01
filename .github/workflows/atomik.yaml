@@ -1,0 +1,226 @@
+name: Atomik Theme UI Tests
+
+on:
+  pull_request:
+  push:
+      branches:
+          - main
+          - 'release/**'
+
+concurrency:
+  # The concurrency group contains the workflow name and the branch name for pull requests
+  # or the commit hash for any other events.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  setup-server-develop-atomik:
+    name: Setup ConcreteCMS Server 
+    runs-on: ubuntu-latest
+    steps:
+        
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and export ConcreteCMS Image
+        uses: docker/build-push-action@v2
+        with:
+          context: support
+          tags: concrete/develop:atomik
+          outputs: type=docker,dest=/tmp/output.tar
+      - name: Upload atomik container
+        uses: actions/upload-artifact@v2
+        with:
+          name: atomik
+          path: /tmp/output.tar
+
+
+  setup-server-develop:
+    name: Setup Repository
+    runs-on: ubuntu-latest
+    steps:
+        
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+
+      - name: "Setup Node"
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Cypress
+        uses: cypress-io/github-action@v2
+        with:
+          runTests: false
+
+      - name: General debug information
+        run: |
+          npm --version
+          node --version
+          curl --version
+          git --version
+          svn --version
+      
+
+  block-test:
+    runs-on: ubuntu-latest
+    services:
+      director:
+        image: agoldis/sorry-cypress-director
+        ports:
+          - 1234:1234  
+    strategy:
+      matrix:
+        browser: [firefox, chrome]
+      fail-fast: false
+    needs:
+      - "setup-server-develop-atomik"
+      - "setup-server-develop"
+    steps:
+      - name: Download docker container
+        uses: actions/download-artifact@v2
+        with: 
+          name: atomik
+          path: /tmp
+      - name: Load docker image for atomik
+        run: "docker load --input /tmp/output.tar"
+
+      - name: Setup ConcreteCMS 
+        run: "docker run -d -p 8080:80 concrete/develop:atomik"
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: "Setup Block Tests - ${{ matrix.browser }}"
+        uses: cypress-io/github-action@v2
+        with:
+          build: npm ci
+          runTests: false
+          wait-on: "http://localhost:8080"
+          wait-on-timeout: 120
+      - name: "Run Block Tests - ${{ matrix.browser }}"
+        run: "npm run ci:test -- -b ${{ matrix.browser }} --group 'Block - ${{ matrix.browser }} : ConcreteCMS : atomik' --ci-build-id `date +%s` --spec 'cypress/integration/blocks/*'"
+        env:
+          CYPRESS_API_URL: "http://localhost:1234/"
+          CI: true
+          CYPRESS_is_atomik: true
+      - name: Save Screenshots and Videos
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: block-test-failure-${{ matrix.browser }}-atomik
+          path: |
+            cypress/screenshots
+            cypress/videos
+          retention-days: 2
+
+
+
+  page-test:
+    runs-on: ubuntu-latest
+    services:
+      director:
+        image: agoldis/sorry-cypress-director
+        ports:
+          - 1234:1234  
+    strategy:      
+      matrix:
+        browser: [firefox, chrome]
+      fail-fast: false
+    needs: 
+      - "setup-server-develop-atomik"
+      - "setup-server-develop"
+    steps:
+      - name: Download docker container
+        uses: actions/download-artifact@v2
+        with: 
+          name: atomik
+          path: /tmp
+      - name: Load docker image for atomik
+        run: "docker load --input /tmp/output.tar"
+
+      - name: Setup ConcreteCMS 
+        run: "docker run -d -p 8080:80 concrete/develop:atomik"
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: "Page Tests - ${{ matrix.browser }}"
+        uses: cypress-io/github-action@v2
+        with:
+          build: npm ci
+          runTests: false
+          wait-on: "http://localhost:8080"
+          wait-on-timeout: 120
+          spec: cypress/integration/page/*
+      - name: "Run Page Tests - ${{ matrix.browser }}"
+        run: "npm run ci:test --  --spec 'cypress/integration/page/*' -b ${{ matrix.browser }} --group 'Page - ${{ matrix.browser }} : ConcreteCMS' --ci-build-id `date +%s`"
+        env:
+          CYPRESS_API_URL: "http://127.0.0.1:1234/"
+          CYPRESS_is_atomik: true
+          CI: true
+      - name: Save Screenshots and Videos
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: page-test-failure-${{ matrix.browser }}-atomik
+          path: |
+            cypress/screenshots
+            cypress/videos
+          retention-days: 2
+        
+  dashboard-test:
+    runs-on: ubuntu-latest
+    services:
+      director:
+        image: agoldis/sorry-cypress-director
+        ports:
+          - 1234:1234  
+    strategy:      
+      matrix:
+        browser: [firefox, chrome]
+      fail-fast: false
+    needs:
+      - "setup-server-develop-atomik"
+      - "setup-server-develop"
+    steps:
+      - name: Download docker container
+        uses: actions/download-artifact@v2
+        with: 
+          name: atomik
+          path: /tmp
+      - name: Load docker image for atomik
+        run: "docker load --input /tmp/output.tar"
+
+      - name: Setup ConcreteCMS 
+        run: "docker run -d -p 8080:80 concrete/develop:atomik"
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: "Dashboard Tests - ${{ matrix.browser }}"
+        uses: cypress-io/github-action@v2
+        with:
+          build: npm install
+          runTests: false
+          wait-on: "http://localhost:8080"
+          wait-on-timeout: 120
+
+      - name: "Run Dashboard Tests - ${{ matrix.browser }}"
+        run: "npm run ci:test --  --spec 'cypress/integration/dashboard/*' -b ${{ matrix.browser }} --group 'Dashboard - ${{ matrix.browser }} : ConcreteCMS' --ci-build-id `date +%s`"
+        env:
+          CYPRESS_API_URL: "http://127.0.0.1:1234/"
+          CI: true
+          CYPRESS_is_atomik: true
+      - name: Save Screenshots and Videos
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: dashboard-test-failure-${{ matrix.browser }}
+          path: |
+            cypress/screenshots
+            cypress/videos
+          retention-days: 2

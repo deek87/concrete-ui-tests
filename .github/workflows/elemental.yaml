@@ -1,4 +1,4 @@
-name: UI Tests
+name: Elemental Theme UI Tests
 
 on:
   pull_request:
@@ -14,33 +14,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  setup-server-develop-atomik:
-    name: Setup ConcreteCMS Server 
-    runs-on: ubuntu-latest
-    steps:
-        
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Build and export ConcreteCMS (Atomik Theme)
-        uses: docker/build-push-action@v2
-        with:
-          context: support
-          tags: concrete/develop:atomik
-          outputs: type=docker,dest=/tmp/output.tar
-      - name: Upload atomik container
-        uses: actions/upload-artifact@v2
-        with:
-          name: atomik
-          path: /tmp/output.tar
-      - name: Tests
-        run: ls -la
-      - name: Tests
-        run: ls -la support/*
-      
   setup-server-develop-elemental:
     name: Setup ConcreteCMS Server 
     runs-on: ubuntu-latest
@@ -48,31 +21,23 @@ jobs:
         
       - name: Checkout
         uses: actions/checkout@v2
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Build and export ConcreteCMS (Atomik Theme)
+      - name: Build and export ConcreteCMS Image
         uses: docker/build-push-action@v2
         with:
           context: support
-          tags: concrete/develop:atomik
-          outputs: type=docker,dest=/tmp/output.tar
+          tags: concrete/develop:elemental
           build-args: CCM_STARTING_POINT=elemental_full
-      - name: Upload atomik container
-        uses: actions/upload-artifact@v2
-        with:
-          name: atomik
-          path: /tmp/output.tar
+          outputs: type=docker,dest=/tmp/output.tar
       - name: Upload elemental container
         uses: actions/upload-artifact@v2
         with:
           name: elemental
-          path: out.tar
-      - name: Tests
-        run: ls -la
-      - name: Tests
-        run: ls -la support/*
+          path: /tmp/output.tar
+
 
   setup-server-develop:
     name: Setup Repository
@@ -112,23 +77,21 @@ jobs:
     strategy:
       matrix:
         browser: [firefox, chrome]
-        theme: [atomik, elemental]
       fail-fast: false
     needs:
-      - "setup-server-develop-atomik"
       - "setup-server-develop-elemental"
       - "setup-server-develop"
     steps:
       - name: Download docker container
         uses: actions/download-artifact@v2
         with: 
-          name: ${{matrix.theme}}
+          name: elemental
           path: /tmp
-      - name: Load docker image for ${{matrix.theme}}
+      - name: Load docker image for elemental
         run: "docker load --input /tmp/output.tar"
 
       - name: Setup ConcreteCMS 
-        run: "docker run -d -p 8080:80 concrete/develop:${{ matrix.theme}}"
+        run: "docker run -d -p 8080:80 concrete/develop:elemental"
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -141,16 +104,16 @@ jobs:
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
       - name: "Run Block Tests - ${{ matrix.browser }}"
-        run: "npm run ci:test -- -b ${{ matrix.browser }} --group 'Block - ${{ matrix.browser }} : ConcreteCMS : ${{ matrix.theme }}' --ci-build-id `date +%s` --spec 'cypress/integration/blocks/*'"
+        run: "npm run ci:test -- -b ${{ matrix.browser }} --group 'Block - ${{ matrix.browser }} : ConcreteCMS : elemental' --ci-build-id `date +%s` --spec 'cypress/integration/blocks/*'"
         env:
           CYPRESS_API_URL: "http://localhost:1234/"
           CI: true
-          CYPRESS_is_atomik: ${{ matrix.theme == 'atomik' }}
+          CYPRESS_is_atomik: false
       - name: Save Screenshots and Videos
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: block-test-failure-${{ matrix.browser }}-${{ matrix.theme }}
+          name: block-test-failure-${{ matrix.browser }}-elemental
           path: |
             cypress/screenshots
             cypress/videos
@@ -168,23 +131,21 @@ jobs:
     strategy:      
       matrix:
         browser: [firefox, chrome]
-        theme: [atomik, elemental]
       fail-fast: false
     needs: 
-      - "setup-server-develop-atomik"
       - "setup-server-develop-elemental"
       - "setup-server-develop"
     steps:
       - name: Download docker container
         uses: actions/download-artifact@v2
         with: 
-          name: ${{matrix.theme}}
+          name: elemental
           path: /tmp
-      - name: Load docker image for ${{matrix.theme}}
+      - name: Load docker image for elemental
         run: "docker load --input /tmp/output.tar"
 
       - name: Setup ConcreteCMS 
-        run: "docker run -d -p 8080:80 concrete/develop:${{ matrix.theme}}"
+        run: "docker run -d -p 8080:80 concrete/develop:elemental"
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -196,71 +157,18 @@ jobs:
           runTests: false
           wait-on: "http://localhost:8080"
           wait-on-timeout: 120
-          #group: "Page - ${{ matrix.browser }} : ConcreteCMS"
           spec: cypress/integration/page/*
       - name: "Run Page Tests - ${{ matrix.browser }}"
         run: "npm run ci:test --  --spec 'cypress/integration/page/*' -b ${{ matrix.browser }} --group 'Page - ${{ matrix.browser }} : ConcreteCMS' --ci-build-id `date +%s`"
         env:
           CYPRESS_API_URL: "http://127.0.0.1:1234/"
-          CYPRESS_is_atomik: ${{ matrix.theme == 'atomik' }}
+          CYPRESS_is_atomik: false
           CI: true
       - name: Save Screenshots and Videos
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: page-test-failure-${{ matrix.browser }}-${{ matrix.theme }}
-          path: |
-            cypress/screenshots
-            cypress/videos
-          retention-days: 2
-        
-  dashboard-test:
-    runs-on: ubuntu-latest
-    services:
-      director:
-        image: agoldis/sorry-cypress-director
-        ports:
-          - 1234:1234  
-    strategy:      
-      matrix:
-        browser: [firefox, chrome]
-      fail-fast: false
-    needs:
-      - "setup-server-develop-atomik"
-      - "setup-server-develop"
-    steps:
-      - name: Download docker container
-        uses: actions/download-artifact@v2
-        with: 
-          name: atomik
-          path: /tmp
-      - name: Load docker image for atomik
-        run: "docker load --input /tmp/output.tar"
-
-      - name: Setup ConcreteCMS 
-        run: "docker run -d -p 8080:80 concrete/develop:atomik"
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: "Dashboard Tests - ${{ matrix.browser }}"
-        uses: cypress-io/github-action@v2
-        with:
-          build: npm install
-          runTests: false
-          wait-on: "http://localhost:8080"
-          wait-on-timeout: 120
-
-      - name: "Run Dashboard Tests - ${{ matrix.browser }}"
-        run: "npm run ci:test --  --spec 'cypress/integration/dashboard/*' -b ${{ matrix.browser }} --group 'Dashboard - ${{ matrix.browser }} : ConcreteCMS' --ci-build-id `date +%s`"
-        env:
-          CYPRESS_API_URL: "http://127.0.0.1:1234/"
-          CI: true
-          CYPRESS_is_atomik: true
-      - name: Save Screenshots and Videos
-        uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          name: dashboard-test-failure-${{ matrix.browser }}
+          name: page-test-failure-${{ matrix.browser }}-elemental
           path: |
             cypress/screenshots
             cypress/videos
