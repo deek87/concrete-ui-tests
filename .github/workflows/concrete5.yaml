@@ -14,11 +14,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  setup-server-develop:
-    name: Setup ConcreteCMS Server
-    strategy:
-      matrix:
-        theme: [atomik, elemental]
+  setup-server-develop-atomik:
+    name: Setup ConcreteCMS Server 
     runs-on: ubuntu-latest
     steps:
         
@@ -26,7 +23,37 @@ jobs:
         uses: actions/checkout@v2
       
       - name: Setup ConcreteCMS
-        run: "DOCKER_BUILDKIT=0 docker build --build-arg CCM_STARTING_POINT=${{ matrix.theme}}_full -t concrete/develop:${{ matrix.theme}} - < support/dockerfile"
+        run: "DOCKER_BUILDKIT=0 docker build --build-arg CCM_STARTING_POINT=atomik_full -t concrete/develop:atomik -f support/dockerfile --output type=tar,dest=out.tar"
+      - name: Upload atomik container
+        uses: actions/upload-artifact@v2
+        with:
+          name: atomik
+          path: out.tar
+      
+  setup-server-develop-elemental:
+    name: Setup ConcreteCMS Server 
+    runs-on: ubuntu-latest
+    steps:
+        
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Setup ConcreteCMS
+        run: "DOCKER_BUILDKIT=0 docker build --build-arg CCM_STARTING_POINT=elemental_full -t concrete/develop:elemental -f support/dockerfile --output type=tar,dest=out.tar"
+      - name: Upload elemental container
+        uses: actions/upload-artifact@v2
+        with:
+          name: elemental
+          path: out.tar
+
+  setup-server-develop:
+    name: Setup Repository
+    runs-on: ubuntu-latest
+    steps:
+        
+      - name: Checkout
+        uses: actions/checkout@v2
+      
 
       - name: "Setup Node"
         uses: actions/setup-node@v2
@@ -59,9 +86,18 @@ jobs:
         browser: [firefox, chrome]
         theme: [atomik, elemental]
       fail-fast: false
-    needs: setup-server-develop
+    needs:
+      - "setup-server-develop-${{ matrix.theme }}"
+      - "setup-server-develop"
     steps:
-      - name: Setup ConcreteCMS
+      - name: Download docker container
+        uses: actions/download-artifact@v2
+        with: 
+          name: ${{matrix.theme}}
+      - name: Load docker image for ${{matrix.theme}}
+        run: "docker load --input out.tar"
+
+      - name: Setup ConcreteCMS 
         run: "docker run -d -p 8080:80 concrete/develop:${{ matrix.theme}}"
 
       - name: Checkout
@@ -104,9 +140,18 @@ jobs:
         browser: [firefox, chrome]
         theme: [atomik, elemental]
       fail-fast: false
-    needs: setup-server-develop
+    needs: 
+      - "setup-server-develop-${{ matrix.theme }}"
+      - "setup-server-develop"
     steps:
-      - name: Setup ConcreteCMS
+      - name: Download docker container
+        uses: actions/download-artifact@v2
+        with: 
+          name: ${{matrix.theme}}
+      - name: Load docker image for ${{matrix.theme}}
+        run: "docker load --input out.tar"
+
+      - name: Setup ConcreteCMS 
         run: "docker run -d -p 8080:80 concrete/develop:${{ matrix.theme}}"
 
       - name: Checkout
@@ -148,9 +193,18 @@ jobs:
       matrix:
         browser: [firefox, chrome]
       fail-fast: false
-    needs: setup-server-develop
+    needs:
+      - "setup-server-develop-atomik"
+      - "setup-server-develop"
     steps:
-      - name: Setup ConcreteCMS
+      - name: Download docker container
+        uses: actions/download-artifact@v2
+        with: 
+          name: atomik
+      - name: Load docker image for atomik
+        run: "docker load --input out.tar"
+
+      - name: Setup ConcreteCMS 
         run: "docker run -d -p 8080:80 concrete/develop:atomik"
       - name: Checkout
         uses: actions/checkout@v2
