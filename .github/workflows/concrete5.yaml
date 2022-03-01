@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v2
       
       - name: Setup ConcreteCMS
-        run: "DOCKER_BUILDKIT=0 docker build -t concrete/develop:atomik --output type=tar,dest=out.tar - < support/dockerfile"
+        run: "DOCKER_BUILDKIT=0 docker build -t concrete/develop:atomik --output type=tar,dest=out.tar -f support/dockerfile ."
       - name: Upload atomik container
         uses: actions/upload-artifact@v2
         with:
@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@v2
       
       - name: Setup ConcreteCMS
-        run: "DOCKER_BUILDKIT=0 docker build --build-arg CCM_STARTING_POINT=elemental_full -t concrete/develop:elemental --output type=tar,dest=out.tar - < support/dockerfile"
+        run: "DOCKER_BUILDKIT=0 docker build --build-arg CCM_STARTING_POINT=elemental_full -t concrete/develop:elemental --output type=tar,dest=out.tar -f support/dockerfile ."
       - name: Upload elemental container
         uses: actions/upload-artifact@v2
         with:
