@@ -87,7 +87,8 @@ jobs:
         theme: [atomik, elemental]
       fail-fast: false
     needs:
-      - "setup-server-develop-${{ matrix.theme }}"
+      - "setup-server-develop-atomik"
+      - "setup-server-develop-elemental"
       - "setup-server-develop"
     steps:
       - name: Download docker container
@@ -141,7 +142,8 @@ jobs:
         theme: [atomik, elemental]
       fail-fast: false
     needs: 
-      - "setup-server-develop-${{ matrix.theme }}"
+      - "setup-server-develop-atomik"
+      - "setup-server-develop-elemental"
       - "setup-server-develop"
     steps:
       - name: Download docker container
