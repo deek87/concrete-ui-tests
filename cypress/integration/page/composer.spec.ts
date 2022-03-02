@@ -168,7 +168,7 @@ describe('Editing a page via composer', () => {
                 let checkIn = $bar.find('li[data-guide-toolbar-action="check-in"] a[data-toolbar-action="check-in"]')
                 if (checkIn && checkIn.length > 0) {
                     cy.wrap(checkIn).click()
-                    cy.get(CheckInPanel.save).click()
+                    //cy.get(CheckInPanel.save).click()
 
                 }
             }))
@@ -180,7 +180,7 @@ describe('Editing a page via composer', () => {
             cy.get(PageSettings.deletePage).scrollIntoView().click()
             cy.get(Dialog.dangerButton).scrollIntoView().click()
             cy.visit((Cypress.env('is_atomik') ? '/about' : '') + '/blog/test-blog-entry', { failOnStatusCode: false })
-            cy.get('.ccm-page').contains('Page Not Found')
+            cy.get('.ccm-page').contains('Page Not Found', { matchCase: false })
         })
     })
 })
