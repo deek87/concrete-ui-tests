@@ -3,7 +3,9 @@
 import { Composer } from "../../support/locators/composer"
 import { Area, Block, Dialog, FileSelect, Form, Notification } from "../../support/locators/core"
 import { AddPanel, ckEditor, SitemapPanel, Toolbar } from "../../support/locators/edit"
-
+before(() => {
+    cy.clearCookies()
+})
 describe('Testing the basic blocks', () => {
     beforeEach(() => {
         // before each test, we can automatically preserve the

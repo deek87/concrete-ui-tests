@@ -1,7 +1,6 @@
 ///<reference types="cypress" />
 
 import { Dashboard } from "../../support/locators/core"
-import { Toolbar } from "../../support/locators/edit"
 
 
 

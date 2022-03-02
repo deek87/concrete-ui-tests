@@ -1,5 +1,4 @@
-import { Dashboard, Dialog, FileManager, Notification } from "../../support/locators/core"
-import { Toolbar } from "../../support/locators/edit"
+import { Dashboard, Dialog, FileManager } from "../../support/locators/core"
 
 
 before(() => {

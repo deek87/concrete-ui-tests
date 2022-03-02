@@ -1,9 +1,11 @@
 ///<reference types="cypress" />
 
 import { Composer } from "../../support/locators/composer"
-import { Area, Block, Dialog, FileSelect, Form, Notification } from "../../support/locators/core"
-import { AddPanel, ckEditor, SitemapPanel, Toolbar } from "../../support/locators/edit"
-
+import { Area, Block, Form } from "../../support/locators/core"
+import { AddPanel, SitemapPanel, Toolbar } from "../../support/locators/edit"
+before(() => {
+    cy.clearCookies()
+})
 describe('Testing the navigation blocks', () => {
     beforeEach(() => {
         // before each test, we can automatically preserve the
@@ -43,10 +45,8 @@ describe('Testing the navigation blocks', () => {
 
         })
         it('adds the first entry', () => {
-            if (!Cypress.isBrowser('firefox')) {
-                // fix for the fact chromium based browsers dont show the first entry
-                cy.get(Block.dialog + ' div.ccm-faq-block-container > button.btn-success.ccm-add-faq-entry').click()
-            }
+            // fix for some browser being slow to load the template
+            cy.wait(100)
             cy.get(Block.dialog + ' ' + Form.text('linkTitle\\[\\]') + ':last').scrollIntoView().type('FAQ Link Title 1')
             cy.get(Block.dialog + ' ' + Form.text('title\\[\\]') + ':last').scrollIntoView().type('FAQ Title 1')
             cy.get(Block.dialog + ' ' + Form.richTextArea('description\\[\\]') + ':last').scrollIntoView().click('bottom').type('FAQ Description 1{shift}{enter}Extra Details...{shift}{enter}..go here...')
